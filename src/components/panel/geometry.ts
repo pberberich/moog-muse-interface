@@ -43,9 +43,9 @@ export const FRAMES: Frame[] = [
   // bottom strip
   { title: "Pitch LFO", x: 20, y: 424, w: 440, h: 164 },
   { title: "Performance", x: 470, y: 424, w: 250, h: 164 },
-  { title: "Arp / Clock", x: 730, y: 424, w: 330, h: 164 }
+  { title: "Arp / Clock", x: 730, y: 424, w: 350, h: 164 }
 ];
 
 export const BRAND_FRAME = { x: 840, y: 14, w: 215, h: 44 };
-export const PROGRAMMER_FRAME = { x: 1070, y: 424, w: 920, h: 164 };
+export const PROGRAMMER_FRAME = { x: 1090, y: 424, w: 900, h: 164 };
 export const MOOG_FRAME = { x: 2000, y: 424, w: 180, h: 164 };

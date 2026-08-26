@@ -490,8 +490,17 @@ button:disabled {
   position: absolute;
   inset: 0;
   background-repeat: no-repeat;
+  background-size: 100% 100%;
   pointer-events: none;
   filter: drop-shadow(0 2.5px 3px rgba(0, 0, 0, 0.65));
+}
+
+.knob-pointer-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 .knob-tick {

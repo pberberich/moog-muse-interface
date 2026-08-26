@@ -1,11 +1,11 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useSyncExternalStore } from "react";
 import { formatValue, Param } from "../../domain";
 
 export interface KnobProps {
   param: Param;
   value: number;
   onChange: (value: number) => void;
-  /** Rendered diameter in px; the filmstrip frame scales to fit. */
+  /** Rendered diameter in px; assets scale to fit. */
   size?: number;
   className?: string;
 }
@@ -17,12 +17,44 @@ const C = VB / 2;
 const TICK_COUNT = 11;
 
 /**
- * Pre-rendered rotation filmstrip (Blender, PBR materials, studio lighting)
- * — the same technique commercial plugin GUIs use. One frame per rotation
- * step; scripts/knob_render.py regenerates the strip.
+ * Asset chain, best available wins:
+ *  1. knob-base.png — a single pointer-less photoreal knob; the pointer is
+ *     composited as crisp vector on top (commercial "static base" technique,
+ *     also ideal for externally produced art — see docs/ASSET-SPEC.md)
+ *  2. knob-strip.png — 64-frame pre-rendered rotation filmstrip
+ *  3. vector fallback body
  */
-const STRIP_FRAMES = 64;
+const BASE_URL = "knob-base.png";
 const STRIP_URL = "knob-strip.png";
+const STRIP_FRAMES = 64;
+
+type AssetStatus = "loading" | "ok" | "fail";
+const assetListeners = new Set<() => void>();
+let baseStatus: AssetStatus = "loading";
+if (typeof Image !== "undefined") {
+  const probe = new Image();
+  probe.onload = () => {
+    baseStatus = "ok";
+    assetListeners.forEach((l) => l());
+  };
+  probe.onerror = () => {
+    baseStatus = "fail";
+    assetListeners.forEach((l) => l());
+  };
+  probe.src = BASE_URL;
+} else {
+  baseStatus = "fail";
+}
+
+function useKnobBase(): AssetStatus {
+  return useSyncExternalStore(
+    (cb) => {
+      assetListeners.add(cb);
+      return () => assetListeners.delete(cb);
+    },
+    () => baseStatus
+  );
+}
 
 function polar(angleDeg: number, radius: number): [number, number] {
   const rad = ((angleDeg - 90) * Math.PI) / 180;
@@ -31,6 +63,7 @@ function polar(angleDeg: number, radius: number): [number, number] {
 
 export function Knob({ param, value, onChange, size = VB, className }: KnobProps) {
   const dragState = useRef<{ startY: number; startValue: number } | null>(null);
+  const base = useKnobBase();
 
   const onPointerDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
@@ -76,6 +109,7 @@ export function Knob({ param, value, onChange, size = VB, className }: KnobProps
     [value, onChange]
   );
 
+  const angle = START + (value / 127) * SWEEP;
   const frame = Math.round((value / 127) * (STRIP_FRAMES - 1));
 
   const ticks = Array.from({ length: TICK_COUNT }, (_, i) => {
@@ -95,6 +129,10 @@ export function Knob({ param, value, onChange, size = VB, className }: KnobProps
       />
     );
   });
+
+  // pointer over the static base: from the cap center out to the skirt edge
+  const [px, py] = polar(angle, 21.8);
+  const [ix, iy] = polar(angle, 5.5);
 
   return (
     <div
@@ -119,18 +157,37 @@ export function Knob({ param, value, onChange, size = VB, className }: KnobProps
         onDoubleClick={() => onChange(param.defaultValue)}
       >
         <svg className="knob-ticks" viewBox={`0 0 ${VB} ${VB}`} aria-hidden="true">
-          {/* vector fallback body, hidden beneath the filmstrip once loaded */}
+          {/* vector fallback body, hidden beneath the loaded artwork */}
           <circle cx={C} cy={C} r={21} fill="#101012" stroke="#000" />
           {ticks}
         </svg>
-        <div
-          className="knob-photo"
-          style={{
-            backgroundImage: `url(${STRIP_URL})`,
-            backgroundSize: `100% ${STRIP_FRAMES * 100}%`,
-            backgroundPositionY: `${(frame / (STRIP_FRAMES - 1)) * 100}%`
-          }}
-        />
+        {base === "ok" ? (
+          <>
+            <div className="knob-photo" style={{ backgroundImage: `url(${BASE_URL})` }} />
+            <svg className="knob-pointer-layer" viewBox={`0 0 ${VB} ${VB}`} aria-hidden="true">
+              <line
+                x1={ix + 0.5}
+                y1={iy + 0.9}
+                x2={px + 0.5}
+                y2={py + 0.9}
+                stroke="#000"
+                strokeWidth="2.6"
+                strokeLinecap="round"
+                opacity="0.55"
+              />
+              <line x1={ix} y1={iy} x2={px} y2={py} className="knob-pointer" />
+            </svg>
+          </>
+        ) : (
+          <div
+            className="knob-photo"
+            style={{
+              backgroundImage: `url(${STRIP_URL})`,
+              backgroundSize: `100% ${STRIP_FRAMES * 100}%`,
+              backgroundPositionY: `${(frame / (STRIP_FRAMES - 1)) * 100}%`
+            }}
+          />
+        )}
       </div>
       <span className="control-value">{formatValue(param, value)}</span>
     </div>

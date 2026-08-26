@@ -15,6 +15,8 @@ argv = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else []
 OUT_DIR = argv[0] if len(argv) > 0 else "/tmp/knob-frames"
 FRAMES = int(argv[1]) if len(argv) > 1 else 64
 RES = int(argv[2]) if len(argv) > 2 else 256
+# KNOB_POINTER=0 renders a pointer-less base for runtime pointer compositing
+POINTER = os.environ.get("KNOB_POINTER", "1") != "0"
 
 os.makedirs(OUT_DIR, exist_ok=True)
 
@@ -70,20 +72,21 @@ skirt.scale = (1.0, 1.0, 1.0)
 cap = add_cyl("cap", 0.64, 0.5, 0.55, plastic, bevel=0.16)
 
 # pointer: thin white bar inset across the cap top, running to its edge
-bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0.29, 0.815))
-ptr = bpy.context.active_object
-ptr.name = "pointer"
-ptr.scale = (0.055, 0.33, 0.012)
-ptr.data.materials.append(white)
-ptr.parent = rotator
+if POINTER:
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0.29, 0.815))
+    ptr = bpy.context.active_object
+    ptr.name = "pointer"
+    ptr.scale = (0.055, 0.33, 0.012)
+    ptr.data.materials.append(white)
+    ptr.parent = rotator
 
-# skirt pointer notch: short bar on the skirt top surface
-bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0.82, 0.435))
-notch = bpy.context.active_object
-notch.name = "notch"
-notch.scale = (0.055, 0.16, 0.012)
-notch.data.materials.append(white)
-notch.parent = rotator
+    # skirt pointer notch: short bar on the skirt top surface
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0.82, 0.435))
+    notch = bpy.context.active_object
+    notch.name = "notch"
+    notch.scale = (0.055, 0.16, 0.012)
+    notch.data.materials.append(white)
+    notch.parent = rotator
 
 # No shadow catcher: the UI composites a clean CSS drop shadow instead,
 # avoiding Cycles alpha noise in the soft shadow.
@@ -134,7 +137,7 @@ scene.render.image_settings.color_mode = "RGBA"
 
 # ---------- render the sweep: -135deg (min) to +135deg (max) ----------
 for i in range(FRAMES):
-    angle = -135.0 + 270.0 * i / (FRAMES - 1)
+    angle = -135.0 + 270.0 * i / max(FRAMES - 1, 1)
     # screen-clockwise pointer motion = negative z rotation in blender
     rotator.rotation_euler = (0, 0, math.radians(-angle))
     scene.render.filepath = os.path.join(OUT_DIR, f"frame_{i:03d}.png")
