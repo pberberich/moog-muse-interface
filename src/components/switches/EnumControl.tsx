@@ -1,28 +1,5 @@
-import { optionForValue, optionSendValue, Param } from "../domain/params";
-
-interface SwitchProps {
-  param: Param;
-  value: number;
-  onChange: (value: number) => void;
-}
-
-/** Illuminated on/off button, Moog panel style. */
-export function Toggle({ param, value, onChange }: SwitchProps) {
-  const on = value >= 64;
-  return (
-    <div className="control toggle" title={param.description ?? param.name}>
-      <button
-        type="button"
-        className={on ? "toggle-btn on" : "toggle-btn"}
-        aria-pressed={on}
-        onClick={() => onChange(on ? 0 : 127)}
-      >
-        <span className="led" />
-      </button>
-      <span className="control-label">{param.name}</span>
-    </div>
-  );
-}
+import { optionForValue, optionSendValue } from "../../domain";
+import { SwitchProps } from "./Toggle";
 
 /** Segmented selector for multi-position switches (waveforms, octaves…). */
 export function EnumControl({ param, value, onChange }: SwitchProps) {

@@ -56,13 +56,34 @@ route on iPad, since iPadOS Safari lacks Web MIDI).
 
 ## Project layout
 
+Modules are small, single-purpose files grouped in directories, each exposed
+through an `index.ts` barrel, with tests colocated next to the code they cover
+(`*.test.ts[x]`, run with `npm test`):
+
 ```
-src/domain/      Muse MIDI CC parameter tables (the single source of truth)
-src/midi/        Transport layer: Web MIDI in the browser, JUCE bridge in plugins
-src/state/       Patch state store + React binding
-src/components/  Knobs, switches, panel sections, keyboard, patch library
-native/          JUCE CMake project (AU / VST3 / Standalone / iOS)
+src/domain/            Muse parameter model (single source of truth)
+  types.ts             Param/Section/EnumOption types
+  options.ts           Shared enum ranges (waveforms, octaves, kb-track…)
+  builders.ts          knob/toggle/enum factory helpers
+  format.ts            Value ↔ label/display mapping
+  sections/            One file per panel section (lfos, filters, mixer…)
+src/midi/              Transport layer
+  webMidiTransport.ts  Web MIDI (browser)
+  juceTransport.ts     JUCE WebView bridge (plugins)
+  createTransport.ts   Environment detection
+  fakeTransport.ts     In-memory transport for tests
+src/state/             App state
+  museStore.ts         Store class (transport injected, fully testable)
+  patchStorage.ts      localStorage persistence + JSON import parsing
+  instance.ts          App-wide singleton
+  useStore.ts          React binding
+src/components/        UI, one directory per component
+  knob/  switches/  panel/  toolbar/  keyboard/  patch-library/
+native/                JUCE CMake project (AU / VST3 / Standalone / iOS)
 ```
+
+Run the suite with `npm test` (Vitest + Testing Library; 44 tests covering the
+parameter tables, MIDI transports, store behavior, persistence, and controls).
 
 ## MIDI mapping notes
 

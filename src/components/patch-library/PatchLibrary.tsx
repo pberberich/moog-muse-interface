@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useStore } from "../state/store";
+import { useStore } from "../../state";
 
 export function PatchLibrary() {
   const store = useStore();

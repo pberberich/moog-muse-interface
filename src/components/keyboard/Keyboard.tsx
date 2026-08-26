@@ -1,13 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useStore } from "../state/store";
-
-/** Computer-keyboard note layout (classic tracker/DAW mapping). */
-const KEY_TO_SEMITONE: Record<string, number> = {
-  a: 0, w: 1, s: 2, e: 3, d: 4, f: 5, t: 6, g: 7, y: 8, h: 9, u: 10, j: 11,
-  k: 12, o: 13, l: 14, p: 15, ";": 16
-};
-
-const NUM_KEYS = 25; // two octaves on screen
+import { useStore } from "../../state";
+import { isBlackKey, KEY_TO_SEMITONE, NUM_KEYS } from "./layout";
 
 export function Keyboard() {
   const store = useStore();
@@ -15,7 +8,7 @@ export function Keyboard() {
   const [held, setHeld] = useState<Set<number>>(new Set());
   const heldRef = useRef(held);
   heldRef.current = held;
-  const baseNote = baseOctave * 12; // C of the base octave (C4 = 48 here)
+  const baseNote = baseOctave * 12; // C of the base octave
 
   const noteOn = useCallback(
     (note: number) => {
@@ -62,7 +55,6 @@ export function Keyboard() {
     };
   }, [baseNote, noteOn, noteOff]);
 
-  const isBlack = (semitone: number) => [1, 3, 6, 8, 10].includes(semitone % 12);
   const keys = Array.from({ length: NUM_KEYS }, (_, i) => baseNote + i);
 
   return (
@@ -83,7 +75,7 @@ export function Keyboard() {
             key={note}
             type="button"
             className={[
-              isBlack(note) ? "key black" : "key white",
+              isBlackKey(note) ? "key black" : "key white",
               held.has(note) ? "held" : ""
             ].join(" ")}
             onPointerDown={(e) => {

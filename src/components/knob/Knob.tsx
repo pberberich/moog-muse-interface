@@ -1,7 +1,7 @@
 import { useCallback, useRef } from "react";
-import { formatValue, Param } from "../domain/params";
+import { formatValue, Param } from "../../domain";
 
-interface KnobProps {
+export interface KnobProps {
   param: Param;
   value: number;
   onChange: (value: number) => void;

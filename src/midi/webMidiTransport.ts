@@ -1,45 +1,7 @@
-/**
- * MIDI transport abstraction.
- *
- * In a browser we use the Web MIDI API. When running inside the JUCE
- * AU/VST3/Standalone wrapper there is no Web MIDI, so MIDI bytes are
- * bridged over the JUCE WebView native-integration event channel instead
- * ("midiFromUI" out, "midiToUI" in) and routed by the host/plugin.
- */
+import { MidiMessageHandler, MidiTransport, PortInfo } from "./types";
 
-export interface PortInfo {
-  id: string;
-  name: string;
-}
-
-export type MidiMessageHandler = (data: Uint8Array) => void;
-
-export interface MidiTransport {
-  readonly kind: "webmidi" | "juce";
-  init(): Promise<void>;
-  inputs(): PortInfo[];
-  outputs(): PortInfo[];
-  selectInput(id: string | null): void;
-  selectOutput(id: string | null): void;
-  selectedInput(): string | null;
-  selectedOutput(): string | null;
-  send(bytes: number[] | Uint8Array): void;
-  onMessage(handler: MidiMessageHandler): void;
-  onPortsChanged(handler: () => void): void;
-}
-
-interface JuceBackend {
-  emitEvent(name: string, payload: unknown): void;
-  addEventListener(name: string, cb: (payload: unknown) => void): void;
-}
-
-declare global {
-  interface Window {
-    __JUCE__?: { backend: JuceBackend };
-  }
-}
-
-class WebMidiTransport implements MidiTransport {
+/** Browser transport using the Web MIDI API. */
+export class WebMidiTransport implements MidiTransport {
   readonly kind = "webmidi" as const;
   private access: MIDIAccess | null = null;
   private inputId: string | null = null;
@@ -125,53 +87,4 @@ class WebMidiTransport implements MidiTransport {
   onPortsChanged(handler: () => void): void {
     this.portHandlers.push(handler);
   }
-}
-
-class JuceTransport implements MidiTransport {
-  readonly kind = "juce" as const;
-  private messageHandlers: MidiMessageHandler[] = [];
-
-  async init(): Promise<void> {
-    window.__JUCE__!.backend.addEventListener("midiToUI", (payload) => {
-      const bytes = (payload as { bytes?: number[] })?.bytes;
-      if (Array.isArray(bytes)) {
-        const data = Uint8Array.from(bytes);
-        this.messageHandlers.forEach((h) => h(data));
-      }
-    });
-  }
-
-  // Port routing is handled by the plugin host; expose a single virtual port.
-  inputs(): PortInfo[] {
-    return [{ id: "host", name: "Plugin host" }];
-  }
-
-  outputs(): PortInfo[] {
-    return [{ id: "host", name: "Plugin host" }];
-  }
-
-  selectInput(): void {}
-  selectOutput(): void {}
-
-  selectedInput(): string | null {
-    return "host";
-  }
-
-  selectedOutput(): string | null {
-    return "host";
-  }
-
-  send(bytes: number[] | Uint8Array): void {
-    window.__JUCE__!.backend.emitEvent("midiFromUI", { bytes: [...bytes] });
-  }
-
-  onMessage(handler: MidiMessageHandler): void {
-    this.messageHandlers.push(handler);
-  }
-
-  onPortsChanged(): void {}
-}
-
-export function createTransport(): MidiTransport {
-  return window.__JUCE__ ? new JuceTransport() : new WebMidiTransport();
 }

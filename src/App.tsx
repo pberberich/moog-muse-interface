@@ -1,10 +1,7 @@
 import { useEffect } from "react";
-import { SECTIONS } from "./domain/params";
-import { store } from "./state/store";
-import { Keyboard } from "./components/Keyboard";
-import { MidiToolbar } from "./components/MidiToolbar";
-import { PanelSection } from "./components/Panel";
-import { PatchLibrary } from "./components/PatchLibrary";
+import { Keyboard, MidiToolbar, PanelSection, PatchLibrary } from "./components";
+import { SECTIONS } from "./domain";
+import { store } from "./state";
 
 export default function App() {
   useEffect(() => {

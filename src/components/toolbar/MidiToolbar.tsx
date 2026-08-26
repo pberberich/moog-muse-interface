@@ -1,4 +1,4 @@
-import { useStore } from "../state/store";
+import { useStore } from "../../state";
 
 export function MidiToolbar() {
   const store = useStore();

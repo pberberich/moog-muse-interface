@@ -1,20 +1,17 @@
-import { useSyncExternalStore } from "react";
-import { ALL_PARAMS, PARAMS_BY_CC } from "../domain/params";
-import { createTransport, MidiTransport, PortInfo } from "../midi/transport";
-
-export interface Patch {
-  name: string;
-  savedAt: string;
-  values: Record<string, number>;
-}
-
-const STORAGE_KEY = "muse-patches-v1";
-const CHANNEL_KEY = "muse-midi-channel";
+import { ALL_PARAMS, PARAMS_BY_CC } from "../domain";
+import { MidiTransport, PortInfo } from "../midi";
+import {
+  loadChannel,
+  loadPatches,
+  parsePatchJson,
+  Patch,
+  storeChannel,
+  storePatches
+} from "./patchStorage";
 
 export type MidiStatus = "idle" | "ready" | "unsupported" | "denied";
 
-class MuseStore {
-  readonly transport: MidiTransport = createTransport();
+export class MuseStore {
   private values = new Map<number, number>();
   private listeners = new Set<() => void>();
   private snapshotCache: Record<string, unknown> | null = null;
@@ -24,10 +21,9 @@ class MuseStore {
   channel = 0; // 0-based (displayed as 1-16)
   lastIncoming = "";
 
-  constructor() {
+  constructor(readonly transport: MidiTransport) {
     for (const p of ALL_PARAMS) this.values.set(p.cc, p.defaultValue);
-    const savedChannel = Number(localStorage.getItem(CHANNEL_KEY));
-    if (savedChannel >= 0 && savedChannel <= 15) this.channel = savedChannel;
+    this.channel = loadChannel() ?? 0;
   }
 
   async init(): Promise<void> {
@@ -74,7 +70,7 @@ class MuseStore {
 
   setChannel(channel: number): void {
     this.channel = channel;
-    localStorage.setItem(CHANNEL_KEY, String(channel));
+    storeChannel(channel);
     this.emit();
   }
 
@@ -117,22 +113,18 @@ class MuseStore {
     this.emit();
   }
 
-  // ----- Patch library (localStorage) -----
+  // ----- Patch library -----
 
   listPatches(): Patch[] {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]") as Patch[];
-    } catch {
-      return [];
-    }
+    return loadPatches();
   }
 
   savePatch(name: string): void {
     const values: Record<string, number> = {};
     for (const p of ALL_PARAMS) values[p.cc] = this.getValue(p.cc);
-    const patches = this.listPatches().filter((p) => p.name !== name);
+    const patches = loadPatches().filter((p) => p.name !== name);
     patches.unshift({ name, savedAt: new Date().toISOString(), values });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(patches));
+    storePatches(patches);
     this.emit();
   }
 
@@ -146,25 +138,20 @@ class MuseStore {
   }
 
   deletePatch(name: string): void {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(this.listPatches().filter((p) => p.name !== name))
-    );
+    storePatches(loadPatches().filter((p) => p.name !== name));
     this.emit();
   }
 
   importPatches(json: string): number {
-    const incoming = JSON.parse(json) as Patch | Patch[];
-    const list = Array.isArray(incoming) ? incoming : [incoming];
-    const valid = list.filter((p) => p && typeof p.name === "string" && p.values);
-    const existing = this.listPatches().filter((e) => !valid.some((v) => v.name === e.name));
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([...valid, ...existing]));
+    const valid = parsePatchJson(json);
+    const existing = loadPatches().filter((e) => !valid.some((v) => v.name === e.name));
+    storePatches([...valid, ...existing]);
     this.emit();
     return valid.length;
   }
 
   exportPatches(): string {
-    return JSON.stringify(this.listPatches(), null, 2);
+    return JSON.stringify(loadPatches(), null, 2);
   }
 
   // ----- subscription -----
@@ -190,12 +177,4 @@ class MuseStore {
     this.snapshotCache = null;
     this.listeners.forEach((l) => l());
   }
-}
-
-export const store = new MuseStore();
-
-/** Re-render the calling component whenever the store changes. */
-export function useStore(): MuseStore {
-  useSyncExternalStore(store.subscribe, store.getSnapshot);
-  return store;
 }

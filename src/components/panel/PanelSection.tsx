@@ -1,7 +1,7 @@
-import { Param, Section } from "../domain/params";
-import { useStore } from "../state/store";
-import { Knob } from "./Knob";
-import { EnumControl, Toggle } from "./Switches";
+import { Param, Section } from "../../domain";
+import { useStore } from "../../state";
+import { Knob } from "../knob";
+import { EnumControl, Toggle } from "../switches";
 
 function Control({ param }: { param: Param }) {
   const store = useStore();
