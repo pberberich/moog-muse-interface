@@ -6,8 +6,12 @@ export function EnumControl({ param, value, onChange }: SwitchProps) {
   const active = optionForValue(param, value);
   // Long ladders (waveform selectors) run vertically like the hardware.
   const vertical = param.options!.length >= 5;
+  // Very wide horizontal selectors (filter Order) take their own row.
+  const wide =
+    !vertical && param.options!.reduce((n, o) => n + o.label.length, 0) > 18;
+  const classes = ["control", "enum", wide ? "wide" : ""].filter(Boolean).join(" ");
   return (
-    <div className="control enum" title={param.description ?? param.name}>
+    <div className={classes} title={param.description ?? param.name}>
       <span className="control-label">{param.name}</span>
       <div
         className={vertical ? "enum-options vertical" : "enum-options"}

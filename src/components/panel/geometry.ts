@@ -19,7 +19,7 @@ export interface Frame {
   h: number;
 }
 
-export const STAGE = { w: 2200, h: 588 };
+export const STAGE = { w: 2200, h: 602 };
 
 export const FRAMES: Frame[] = [
   // top band — left
@@ -31,7 +31,7 @@ export const FRAMES: Frame[] = [
   { title: "Oscillator 2", x: 645, y: 14, w: 185, h: 400 },
   // top band — center (below the MUSE nameplate)
   { title: "Mixer", x: 840, y: 66, w: 215, h: 172 },
-  { title: "Arp / Clock", x: 840, y: 246, w: 215, h: 168 },
+  { title: "Sync / FM", x: 840, y: 246, w: 215, h: 168 },
   // top band — filters and envelopes
   { title: "Filter 1", x: 1065, y: 14, w: 210, h: 400 },
   { title: "Filter 2", x: 1285, y: 14, w: 215, h: 400 },
@@ -41,11 +41,11 @@ export const FRAMES: Frame[] = [
   { title: "Voices", x: 1755, y: 14, w: 175, h: 400 },
   { title: "Delay", x: 1940, y: 14, w: 240, h: 400 },
   // bottom strip
-  { title: "Pitch LFO", x: 20, y: 424, w: 440, h: 150 },
-  { title: "Performance", x: 470, y: 424, w: 270, h: 150 },
-  { title: "Sync / FM", x: 750, y: 424, w: 220, h: 150 }
+  { title: "Pitch LFO", x: 20, y: 424, w: 440, h: 164 },
+  { title: "Performance", x: 470, y: 424, w: 250, h: 164 },
+  { title: "Arp / Clock", x: 730, y: 424, w: 330, h: 164 }
 ];
 
 export const BRAND_FRAME = { x: 840, y: 14, w: 215, h: 44 };
-export const PROGRAMMER_FRAME = { x: 980, y: 424, w: 1010, h: 150 };
-export const MOOG_FRAME = { x: 2000, y: 424, w: 180, h: 150 };
+export const PROGRAMMER_FRAME = { x: 1070, y: 424, w: 920, h: 164 };
+export const MOOG_FRAME = { x: 2000, y: 424, w: 180, h: 164 };

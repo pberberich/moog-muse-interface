@@ -21,6 +21,8 @@ export class MuseStore {
   statusMessage = "";
   channel = 0; // 0-based (displayed as 1-16)
   lastIncoming = "";
+  /** Shown on the Programmer's LED display, like the hardware. */
+  currentPatchName = "INIT";
 
   constructor(readonly transport: MidiTransport) {
     for (const p of ALL_PARAMS) this.values.set(p.cc, p.defaultValue);
@@ -117,6 +119,7 @@ export class MuseStore {
 
   resetToInit(): void {
     for (const p of ALL_PARAMS) this.values.set(p.cc, p.defaultValue);
+    this.currentPatchName = "INIT";
     this.sendAll();
     this.emit();
   }
@@ -126,6 +129,7 @@ export class MuseStore {
     for (const p of ALL_PARAMS) {
       this.values.set(p.cc, preset.values[p.cc] ?? p.defaultValue);
     }
+    this.currentPatchName = preset.name;
     this.sendAll();
     this.emit();
   }
@@ -161,6 +165,7 @@ export class MuseStore {
     const patches = loadPatches().filter((p) => p.name !== name);
     patches.unshift({ name, savedAt: new Date().toISOString(), values });
     storePatches(patches);
+    this.currentPatchName = name;
     this.emit();
   }
 
@@ -169,6 +174,7 @@ export class MuseStore {
       const n = Number(cc);
       if (PARAMS_BY_CC.has(n)) this.values.set(n, value);
     }
+    this.currentPatchName = patch.name;
     this.sendAll();
     this.emit();
   }
@@ -203,7 +209,8 @@ export class MuseStore {
         values: Object.fromEntries(this.values),
         status: this.status,
         channel: this.channel,
-        lastIncoming: this.lastIncoming
+        lastIncoming: this.lastIncoming,
+        currentPatchName: this.currentPatchName
       };
     }
     return this.snapshotCache;

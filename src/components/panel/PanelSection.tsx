@@ -30,7 +30,7 @@ function Control({ param, sliders, knobSize }: ControlProps) {
         param={param}
         value={value}
         onChange={onChange}
-        size={big ? 88 : knobSize}
+        size={big ? 96 : knobSize}
         className={big ? "lead" : undefined}
       />
     );
@@ -47,7 +47,7 @@ export function PanelSection({ section }: { section: Section }) {
   const sliders = SLIDER_SECTIONS[section.title];
   const dense = DENSE_SECTIONS.has(section.title);
   const compact = COMPACT_SECTIONS.has(section.title);
-  const knobSize = dense ? 40 : compact ? 52 : 60;
+  const knobSize = dense ? 46 : compact ? 58 : 68;
   const classes = [
     "panel-section",
     sliders === "h" ? "sliders-h" : "",

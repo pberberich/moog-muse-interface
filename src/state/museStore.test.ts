@@ -113,6 +113,20 @@ describe("notes and bulk send", () => {
   });
 });
 
+describe("current patch display name", () => {
+  it("tracks init, presets, saves, and loads", () => {
+    expect(store.currentPatchName).toBe("INIT");
+    store.applyPreset(PRESETS[0]);
+    expect(store.currentPatchName).toBe(PRESETS[0].name);
+    store.savePatch("my patch");
+    expect(store.currentPatchName).toBe("my patch");
+    store.resetToInit();
+    expect(store.currentPatchName).toBe("INIT");
+    store.loadPatch(store.listPatches()[0]);
+    expect(store.currentPatchName).toBe("my patch");
+  });
+});
+
 describe("presets", () => {
   it("applies preset values on top of init defaults and transmits everything", () => {
     const pad = PRESETS.find((p) => p.name === "Warm Pad")!;

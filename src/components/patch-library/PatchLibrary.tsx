@@ -37,6 +37,9 @@ export function PatchLibrary() {
   return (
     <aside className="patch-library panel-section">
       <h2>Programmer</h2>
+      <span className="patch-display" title="Current patch">
+        {store.currentPatchName}
+      </span>
       <div className="patch-save-row">
         <input
           type="text"

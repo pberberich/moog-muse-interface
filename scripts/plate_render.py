@@ -63,8 +63,8 @@ bump.inputs["Strength"].default_value = 0.03
 links.new(noise.outputs["Fac"], bump.inputs["Height"])
 links.new(bump.outputs["Normal"], bsdf.inputs["Normal"])
 
-silk = principled("silk", (0.62, 0.60, 0.53), 0.6)
-silk_dim = principled("silk_dim", (0.44, 0.43, 0.38), 0.6)
+silk = principled("silk", (0.88, 0.86, 0.80), 0.55)
+silk_dim = principled("silk_dim", (0.74, 0.72, 0.66), 0.55)
 
 Z_PANEL = 0.0
 Z_PRINT = 0.004  # raised silkscreen
@@ -153,8 +153,8 @@ def add_text(entry):
     curve = bpy.data.curves.new("t", type="FONT")
     curve.body = body.upper() if entry["kind"] != "badge" else body
     curve.font = FONT
-    curve.size = size_px * U * 1.05
-    curve.space_character = 1.0 + (entry["letterSpacing"] / max(size_px, 1)) * 1.6
+    curve.size = size_px * U
+    curve.space_character = 1.0 + (entry["letterSpacing"] / max(size_px, 1)) * 1.2
     curve.align_x = "CENTER"
     curve.align_y = "CENTER"
     curve.space_line = 1.25
