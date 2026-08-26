@@ -115,29 +115,64 @@ export function Knob({ param, value, onChange, size = SIZE, className }: KnobPro
         onDoubleClick={() => onChange(param.defaultValue)}
       >
         <defs>
-          <radialGradient id="knob-skirt-g" cx="38%" cy="30%" r="80%">
-            <stop offset="0%" stopColor="#3d3d40" />
-            <stop offset="55%" stopColor="#1a1a1c" />
+          <radialGradient id="knob-skirt-g" cx="35%" cy="26%" r="88%">
+            <stop offset="0%" stopColor="#4c4c52" />
+            <stop offset="42%" stopColor="#242427" />
+            <stop offset="78%" stopColor="#121214" />
             <stop offset="100%" stopColor="#050506" />
           </radialGradient>
-          <radialGradient id="knob-cap-g" cx="40%" cy="32%" r="75%">
-            <stop offset="0%" stopColor="#333336" />
-            <stop offset="65%" stopColor="#131315" />
-            <stop offset="100%" stopColor="#0a0a0b" />
+          <radialGradient id="knob-cap-g" cx="38%" cy="28%" r="82%">
+            <stop offset="0%" stopColor="#3e3e44" />
+            <stop offset="55%" stopColor="#1c1c1f" />
+            <stop offset="100%" stopColor="#0a0a0c" />
           </radialGradient>
+          <linearGradient id="knob-sheen-g" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.20)" />
+            <stop offset="45%" stopColor="rgba(255,255,255,0.02)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+          </linearGradient>
+          <filter id="knob-blur-g" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="1.7" />
+          </filter>
         </defs>
         {ticks}
-        <circle cx={C} cy={C} r={24.5} fill="#000" opacity="0.55" />
-        <circle cx={C} cy={C} r={24} fill="url(#knob-skirt-g)" stroke="#000" strokeWidth="1" />
-        <circle
+        {/* ambient drop shadow */}
+        <ellipse
           cx={C}
-          cy={C}
-          r={15.5}
-          fill="url(#knob-cap-g)"
-          stroke="#000"
-          strokeWidth="1"
+          cy={C + 2.6}
+          rx={24.6}
+          ry={23.4}
+          fill="#000"
+          opacity="0.6"
+          filter="url(#knob-blur-g)"
         />
-        <circle cx={C} cy={C - 13.2} r={4.5} fill="#ffffff" opacity="0.04" />
+        {/* rubberized skirt with rim light */}
+        <circle cx={C} cy={C} r={24} fill="url(#knob-skirt-g)" stroke="#000" strokeWidth="1" />
+        <circle cx={C} cy={C} r={23.1} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="0.8" />
+        <circle cx={C} cy={C} r={16.6} fill="none" stroke="rgba(0,0,0,0.55)" strokeWidth="1.4" />
+        {/* domed cap with sheen and specular */}
+        <circle cx={C} cy={C} r={15.6} fill="url(#knob-cap-g)" stroke="#000" strokeWidth="1" />
+        <circle cx={C} cy={C} r={15.2} fill="url(#knob-sheen-g)" />
+        <ellipse
+          cx={C - 4.6}
+          cy={C - 6.8}
+          rx={6.4}
+          ry={4}
+          fill="#fff"
+          opacity="0.09"
+          filter="url(#knob-blur-g)"
+        />
+        {/* pointer with its own cast shadow */}
+        <line
+          x1={ix + 0.7}
+          y1={iy + 1.1}
+          x2={px + 0.7}
+          y2={py + 1.1}
+          stroke="#000"
+          strokeWidth="2.8"
+          strokeLinecap="round"
+          opacity="0.5"
+        />
         <line x1={ix} y1={iy} x2={px} y2={py} className="knob-pointer" />
       </svg>
       <span className="control-value">{formatValue(param, value)}</span>
