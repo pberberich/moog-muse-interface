@@ -33,6 +33,10 @@ jobs:
             libxext-dev libxinerama-dev libxrandr-dev libxrender-dev \
             libglu1-mesa-dev libwebkit2gtk-4.1-dev libgtk-3-dev
 
+      - name: Install WebView2 SDK (Windows)
+        if: runner.os == 'Windows'
+        run: nuget install Microsoft.Web.WebView2 -Version 1.0.1901.177 -OutputDirectory webview2-sdk
+
       - name: Build web UI
         run: |
           npm ci
@@ -40,7 +44,7 @@ jobs:
 
       - name: Configure and build plugins
         run: |
-          cmake -B native/build -S native -DCMAKE_BUILD_TYPE=Release
+          cmake -B native/build -S native -DCMAKE_BUILD_TYPE=Release -DJUCE_WEBVIEW2_PACKAGE_LOCATION="${{ github.workspace }}/webview2-sdk"
           cmake --build native/build --config Release --parallel 3
 
       - uses: actions/upload-artifact@v4
