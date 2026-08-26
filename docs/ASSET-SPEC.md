@@ -72,6 +72,27 @@ Single sprites, tightly cropped with ~4% transparent margin.
 | `key-black.png` / `key-black-down.png` | Black key, glossy top | 200×760 |
 | `wood.png` | Walnut end-cheek texture, vertical grain, tileable vertically | 256×2048 |
 
+## Using an AI image service
+
+Delivery: individual PNG files committed to this repo (chat-pasted images
+cannot be used — the pixels never arrive as files). One asset per file, not
+montage sheets.
+
+Rules that make generated output usable:
+
+- **Layout comes from real photographs of the Muse, never from generation.**
+  Generated full-panel mockups invent layouts; only per-control sprites are
+  wanted. Style reference: matte **black** knobs (the real Muse has no
+  silver-topped knobs), warm-white silkscreen, red LEDs, walnut cheeks.
+- **Knob: generate ONE frame, not a filmstrip.** A single perfect top-down
+  knob **without any pointer line** (`knob-base.png`, ≥512×512, transparent,
+  knob ≈68% of frame). The app composites a rotating pointer over the static
+  base, which sidesteps AI frame-consistency entirely. If a pointer is
+  unavoidable, put it exactly at 12 o'clock.
+- Transparent background (or pure #00FF00 to key out), no drop shadow, no
+  text, camera perfectly top-down, key light upper-left on every asset.
+- Single sprites per file for caps/buttons/LEDs/wheels per the tables above.
+
 ## Regenerating the built-in assets instead
 
 The repo can rebuild its own versions with Blender:
