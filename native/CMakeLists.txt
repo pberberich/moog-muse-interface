@@ -64,6 +64,15 @@ target_compile_definitions(MoogMuseInterface PRIVATE
   JUCE_VST3_CAN_REPLACE_VST2=0
 )
 
+# On Windows the modern WebView APIs (resource provider, native integration)
+# exist only with the WebView2 backend; NEEDS_WEBVIEW2 links the static
+# loader that this flag requires.
+if(WIN32)
+  target_compile_definitions(MoogMuseInterface PRIVATE
+    JUCE_USE_WIN_WEBVIEW2_WITH_STATIC_LINKING=1
+  )
+endif()
+
 target_link_libraries(MoogMuseInterface
   PRIVATE
     MuseUIData
