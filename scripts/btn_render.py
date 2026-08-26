@@ -19,11 +19,18 @@ os.makedirs(OUT_DIR, exist_ok=True)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 scene = bpy.context.scene
 
+# name -> (base color, cap scale, bevel width)
 CAPS = {
-    "btn-gray": (0.055, 0.055, 0.060),
-    "btn-yellow": (0.750, 0.520, 0.030),
-    "btn-orange": (0.780, 0.190, 0.028),
-    "btn-cyan": (0.030, 0.420, 0.480),
+    "btn-gray": ((0.055, 0.055, 0.060), (0.62, 0.40, 0.16), 0.10),
+    "btn-yellow": ((0.750, 0.520, 0.030), (0.62, 0.40, 0.16), 0.10),
+    "btn-orange": ((0.780, 0.190, 0.028), (0.62, 0.40, 0.16), 0.10),
+    "btn-cyan": ((0.030, 0.420, 0.480), (0.62, 0.40, 0.16), 0.10),
+    # white light-up cap (Hold, FW/BK, Tap Tempo…)
+    "btn-white": ((0.700, 0.690, 0.650), (0.62, 0.40, 0.16), 0.10),
+    # small red lozenge LED-button (KB Reset, Loop, Link, Mute…)
+    "btn-red": ((0.480, 0.022, 0.018), (0.50, 0.24, 0.11), 0.10),
+    # wide gray rocker for the option selectors (Waveform, KB Tracking…)
+    "btn-rocker": ((0.060, 0.060, 0.066), (0.78, 0.28, 0.14), 0.11),
 }
 
 
@@ -78,18 +85,17 @@ scene.render.image_settings.file_format = "PNG"
 scene.render.image_settings.color_mode = "RGBA"
 
 # cap: chunky beveled block whose rounded top reads as a molded button face
-bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, 0.16))
-cap = bpy.context.active_object
-cap.scale = (0.62, 0.40, 0.16)
-mod = cap.modifiers.new("bevel", "BEVEL")
-mod.width = 0.10
-mod.segments = 6
-bpy.ops.object.shade_smooth()
-
-for name, base in CAPS.items():
-    cap.data.materials.clear()
+for name, (base, scale, bevel) in CAPS.items():
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, scale[2]))
+    cap = bpy.context.active_object
+    cap.scale = scale
+    mod = cap.modifiers.new("bevel", "BEVEL")
+    mod.width = bevel
+    mod.segments = 6
+    bpy.ops.object.shade_smooth()
     cap.data.materials.append(cap_material(name, base))
     scene.render.filepath = os.path.join(OUT_DIR, f"{name}.png")
     bpy.ops.render.render(write_still=True)
+    bpy.data.objects.remove(cap, do_unlink=True)
 
 print("rendered button caps")

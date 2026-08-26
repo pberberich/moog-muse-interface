@@ -20,5 +20,7 @@ export interface Param {
 
 export interface Section {
   title: string;
+  /** Silkscreen subtitle under the title, e.g. the filters' mode legends. */
+  subtitle?: string;
   params: Param[];
 }

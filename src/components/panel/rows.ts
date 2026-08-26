@@ -1,11 +1,11 @@
 import { Section, SECTIONS } from "../../domain";
 
-/** Sections whose knob-type params render as faders, like the hardware:
- *  vertical for the envelope banks, horizontal for the MIX block. */
+/** Sections whose knob-type params render as faders — all vertical on the
+ *  hardware (envelope banks and the MIX block alike). */
 export const SLIDER_SECTIONS: Record<string, "v" | "h"> = {
   "Filter Envelope": "v",
-  "Amplifier Envelope": "v",
-  Mixer: "h"
+  "VCA Envelope": "v",
+  Mixer: "v"
 };
 
 /** The hardware gives the filter cutoff knobs extra size, mounted on top. */
@@ -27,10 +27,11 @@ export const COMPACT_SECTIONS = new Set([
   "LFO 2"
 ]);
 
-/** Colored button caps, matching the hardware's accent buttons. */
-export const ACCENT_CCS: Record<number, "yellow" | "orange" | "cyan"> = {
+/** Light-up cap buttons, matching the hardware. Buttons not listed here
+ *  render as the small red lozenge LED-buttons used across the panel. */
+export const ACCENT_CCS: Record<number, "yellow" | "orange" | "cyan" | "white"> = {
   112: "yellow", // Arp On
-  71: "orange", // Hold
+  71: "white", // Hold — white cap on the hardware's left cheek
   106: "cyan", // Delay Timbre A
   107: "cyan" // Delay Timbre B
 };

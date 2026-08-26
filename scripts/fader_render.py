@@ -62,29 +62,18 @@ scene.render.film_transparent = True
 scene.render.image_settings.file_format = "PNG"
 scene.render.image_settings.color_mode = "RGBA"
 
-# cap: beveled block with a shallow center groove, like the hardware caps
-bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, 0.15))
+# cap: smooth white pill, like the hardware's oval fader caps
+bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, 0.16))
 cap = bpy.context.active_object
-cap.scale = (0.62, 0.40, 0.15)
+cap.scale = (0.62, 0.36, 0.16)
 mod = cap.modifiers.new("bevel", "BEVEL")
-mod.width = 0.05
-mod.segments = 4
+mod.width = 0.14
+mod.segments = 7
 cap.data.materials.append(mat)
 bpy.ops.object.shade_smooth()
 
-groove_mat = bpy.data.materials.new("groove")
-groove_mat.use_nodes = True
-gb = groove_mat.node_tree.nodes["Principled BSDF"]
-gb.inputs["Base Color"].default_value = (0.06, 0.06, 0.065, 1.0)
-gb.inputs["Roughness"].default_value = 0.5
-bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0, 0.305))
-groove = bpy.context.active_object
-groove.scale = (0.64, 0.045, 0.012)
-groove.data.materials.append(groove_mat)
-
 for name, rot in (("fader-cap-v", 0.0), ("fader-cap-h", 90.0)):
     cap.rotation_euler = (0, 0, math.radians(rot))
-    groove.rotation_euler = (0, 0, math.radians(rot))
     scene.render.filepath = os.path.join(OUT_DIR, f"{name}.png")
     bpy.ops.render.render(write_still=True)
 

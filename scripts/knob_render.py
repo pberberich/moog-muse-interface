@@ -74,10 +74,11 @@ skirt.scale = (1.0, 1.0, 1.0)
 # cap: taller drum with generous bevel so it reads as a domed top
 cap = add_cyl("cap", 0.64, 0.5, 0.55, plastic, bevel=0.16)
 
-# aluminum insert: a thin turned-metal disc set into the cap top, with a
-# slightly darker chamfered rim ring around it (Minimoog-style)
-add_cyl("alu_rim", 0.44, 0.02, 0.805, alu_rim, bevel=0.008)
-add_cyl("alu_disc", 0.40, 0.024, 0.812, alu, bevel=0.01)
+# aluminum insert: a turned-metal disc covering most of the cap top with a
+# slightly darker chamfered rim ring, as on the hardware's knobs — the
+# silver face reads nearly edge-to-edge with a thin black ring around it
+add_cyl("alu_rim", 0.57, 0.02, 0.805, alu_rim, bevel=0.008)
+add_cyl("alu_disc", 0.53, 0.024, 0.812, alu, bevel=0.012)
 
 # pointer: thin white bar inset across the cap top, running to its edge
 if POINTER:

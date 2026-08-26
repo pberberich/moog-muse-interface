@@ -28,22 +28,24 @@ export const OCTAVES: EnumOption[] = [
   { label: "2'", min: 96, max: 127 }
 ];
 
+/* Option labels below match the panel silkscreen on the hardware. */
+
 export const KB_TRACK: EnumOption[] = [
   { label: "Off", min: 0, max: 42 },
-  { label: "Half", min: 43, max: 84 },
-  { label: "Full", min: 85, max: 127 }
+  { label: "1:2", min: 43, max: 84 },
+  { label: "1:1", min: 85, max: 127 }
 ];
 
 export const FILTER_ORDER: EnumOption[] = [
-  { label: "Serial", min: 0, max: 42 },
-  { label: "Stereo", min: 43, max: 84 },
-  { label: "Parallel", min: 85, max: 127 }
+  { label: "Ser", min: 0, max: 42 },
+  { label: "Str", min: 43, max: 84 },
+  { label: "Par", min: 85, max: 127 }
 ];
 
 export const ARP_DIRECTION: EnumOption[] = [
-  { label: "Order", min: 0, max: 42 },
-  { label: "Pattern", min: 43, max: 84 },
-  { label: "Random", min: 85, max: 127 }
+  { label: "Ord", min: 0, max: 42 },
+  { label: "Ptn", min: 43, max: 84 },
+  { label: "Rnd", min: 85, max: 127 }
 ];
 
 export const ARP_OCTAVES: EnumOption[] = [

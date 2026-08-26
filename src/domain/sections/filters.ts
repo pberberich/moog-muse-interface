@@ -4,6 +4,7 @@ import { Section } from "../types";
 
 export const FILTER_1: Section = {
   title: "Filter 1",
+  subtitle: "High / Low Pass",
   params: [
     knob(66, "High Pass", 0, "High-pass filter cutoff"),
     knob(67, "Cutoff", 96, "Low-pass ladder cutoff"),
@@ -15,6 +16,7 @@ export const FILTER_1: Section = {
 
 export const FILTER_2: Section = {
   title: "Filter 2",
+  subtitle: "Low Pass",
   params: [
     knob(72, "Frequency", 96, "State-variable filter frequency"),
     knob(73, "Resonance", 0, "SVF resonance"),

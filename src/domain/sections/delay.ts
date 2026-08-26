@@ -2,7 +2,7 @@ import { knob, toggle } from "../builders";
 import { Section } from "../types";
 
 export const DELAY: Section = {
-  title: "Delay",
+  title: "Diffusion Delay",
   params: [
     knob(93, "Time L", 32, "Left delay time"),
     knob(94, "Time R", 32, "Right delay time"),

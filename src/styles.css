@@ -258,6 +258,7 @@ button:disabled {
 }
 
 .stage.has-photo .panel-section > h2,
+.stage.has-photo .section-sub,
 .stage.has-photo .brand-plate,
 .stage.has-photo .moog-badge,
 .stage.has-photo .control-label,
@@ -370,6 +371,17 @@ button:disabled {
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--silk-strong);
+}
+
+/* silkscreen subtitle under the title, e.g. the filters' mode legends */
+.section-sub {
+  text-align: center;
+  font-size: 0.42rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--silk);
+  margin: -0.45rem 0 0.1rem;
 }
 
 .section-controls {
@@ -536,22 +548,6 @@ button:disabled {
 /* hardware-style button: red LED dot above a small gray (or colored) cap */
 
 /* unlit LEDs stay visibly dark red, like the hardware's translucent lenses */
-.led-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #7c2417, #57170e 65%, #38100a);
-  box-shadow: inset 0 1px 1.5px rgba(0, 0, 0, 0.8);
-}
-
-.led-dot.on {
-  background: radial-gradient(circle at 38% 32%, #ffd9c0, var(--led) 55%, #8e2506);
-  box-shadow:
-    0 0 9px rgba(255, 92, 31, 0.95),
-    0 0 3px var(--led),
-    0 0 18px rgba(255, 92, 31, 0.35);
-}
-
 .push-btn {
   width: 34px;
   height: 20px;
@@ -575,6 +571,24 @@ button:disabled {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7), inset 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
+/* red lozenge LED-buttons: the button is its own indicator, dark red
+   plastic unlit, glowing red when engaged (KB Reset, Loop, Link, Mute…) */
+.push-btn.lozenge {
+  width: 30px;
+  height: 15px;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #5c1712 0%, #401009 60%, #2d0a06 100%);
+}
+
+.push-btn.lozenge[aria-pressed="true"] {
+  background: linear-gradient(180deg, #ff8a5e 0%, #e8391a 55%, #a81f08 100%);
+  box-shadow:
+    0 0 11px rgba(255, 82, 30, 0.85),
+    0 0 4px rgba(255, 82, 30, 0.95),
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.35);
+}
+
+/* light-up caps: white plastic that lights its color from behind */
 .push-btn.accent-yellow {
   background: linear-gradient(180deg, #ffe9a0 0%, #f5c93e 50%, #c99b18 100%);
 }
@@ -587,10 +601,15 @@ button:disabled {
   background: linear-gradient(180deg, #d8f3f7 0%, #9fd8e8 50%, #5da4bb 100%);
 }
 
-/* colored caps are larger, like the hardware's lit performance buttons */
+.push-btn.accent-white {
+  background: linear-gradient(180deg, #f4f2ea 0%, #ccc9c0 55%, #a8a59d 100%);
+}
+
+/* cap buttons are larger, like the hardware's lit performance buttons */
 .push-btn.accent-yellow,
 .push-btn.accent-orange,
-.push-btn.accent-cyan {
+.push-btn.accent-cyan,
+.push-btn.accent-white {
   width: 40px;
   height: 24px;
 }
@@ -620,6 +639,14 @@ button:disabled {
   filter: brightness(1.15);
 }
 
+.push-btn.accent-white[aria-pressed="true"] {
+  box-shadow:
+    0 0 12px rgba(255, 240, 205, 0.75),
+    0 0 4px rgba(255, 240, 205, 0.9),
+    inset 0 1.5px 0.5px rgba(255, 255, 255, 0.4);
+  filter: brightness(1.2);
+}
+
 /* 3D-rendered sprite caps (scripts/btn_render.py) replace the CSS caps
    when the art loads; the sprite carries its own bevel and edge. */
 .push-btn.sprite {
@@ -633,7 +660,8 @@ button:disabled {
 
 .push-btn.sprite.accent-yellow,
 .push-btn.sprite.accent-orange,
-.push-btn.sprite.accent-cyan {
+.push-btn.sprite.accent-cyan,
+.push-btn.sprite.accent-white {
   width: 42px;
   height: 27px;
 }
@@ -662,33 +690,88 @@ button:disabled {
   filter: drop-shadow(0 0 7px rgba(140, 220, 240, 0.9)) brightness(1.25);
 }
 
-/* LED ladder selector */
+.push-btn.sprite.accent-white[aria-pressed="true"] {
+  box-shadow: none;
+  filter: drop-shadow(0 0 8px rgba(255, 240, 205, 0.95)) brightness(1.28);
+}
+
+/* sprite lozenge: one bright-red render, dimmed unlit and glowing lit */
+.push-btn.sprite.lozenge {
+  width: 32px;
+  height: 17px;
+  filter: drop-shadow(1.2px 2px 2.5px rgba(0, 0, 0, 0.6)) brightness(0.42)
+    saturate(0.8);
+}
+
+.push-btn.sprite.lozenge:hover:not(:disabled) {
+  filter: drop-shadow(1.2px 2px 2.5px rgba(0, 0, 0, 0.6)) brightness(0.6)
+    saturate(0.85);
+}
+
+.push-btn.sprite.lozenge[aria-pressed="true"] {
+  box-shadow: none;
+  filter: drop-shadow(0 0 8px rgba(255, 70, 25, 0.95)) brightness(1.45)
+    saturate(1.2);
+}
+
+/* option selector: LED row over legends, wide rocker button beneath,
+   section name printed under the rocker — like the hardware */
 
 .enum {
   width: auto;
   max-width: 10rem;
 }
 
-.enum.wide {
-  flex-basis: 100%;
-}
-
 .enum-options {
   display: flex;
   gap: 0.15rem;
-  margin-top: 0.15rem;
+  margin-top: 0.05rem;
 }
 
-.enum-options.vertical {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
+.rocker {
+  position: relative;
+  width: 46px;
+  height: 19px;
+  padding: 0;
+  margin-top: 1px;
+  border-radius: 3px;
+  border: 1px solid #000;
+  background: linear-gradient(180deg, #55555c 0%, #333338 55%, #232327 100%);
+  box-shadow:
+    1.5px 2.5px 3px rgba(0, 0, 0, 0.7),
+    inset 0 1.5px 0.5px rgba(255, 255, 255, 0.25);
 }
 
-.enum-options.vertical .enum-btn {
-  flex-direction: row;
-  gap: 0.35rem;
-  padding: 0.1rem 0.2rem;
+.rocker.sprite {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  filter: drop-shadow(1.5px 2.5px 3px rgba(0, 0, 0, 0.65));
+}
+
+.rocker:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+
+.rocker.sprite:hover:not(:disabled) {
+  filter: drop-shadow(1.5px 2.5px 3px rgba(0, 0, 0, 0.65)) brightness(1.15);
+}
+
+.rocker:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.rocker-chevron {
+  position: absolute;
+  left: 7px;
+  top: 50%;
+  transform: translateY(-56%);
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
 }
 
 .enum-btn {
@@ -816,6 +899,9 @@ button:disabled {
 .vslider .control-label {
   font-size: 0.43rem;
   letter-spacing: 0.03em;
+  max-width: 100%;
+  justify-content: center;
+  line-height: 1.15;
 }
 
 .vslider-track {
@@ -1048,6 +1134,7 @@ button:disabled {
   gap: 0.3rem;
 }
 
+/* bright ridged metal wheels, like the hardware's pitch/mod wheels */
 .wheel {
   position: relative;
   width: 1.55rem;
@@ -1055,8 +1142,14 @@ button:disabled {
   min-height: 6rem;
   border-radius: 0.7rem;
   background:
-    linear-gradient(90deg, #000 0%, #2e2e33 18%, #46464c 50%, #2e2e33 82%, #000 100%);
-  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.06);
+    repeating-linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.30) 0 2px,
+      rgba(255, 255, 255, 0.14) 2px 4px,
+      rgba(0, 0, 0, 0) 4px 7px
+    ),
+    linear-gradient(90deg, #3c3c40 0%, #a8a8ac 18%, #d6d6d8 50%, #9c9ca0 82%, #333337 100%);
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.08);
   touch-action: none;
   cursor: ns-resize;
 }
@@ -1067,8 +1160,8 @@ button:disabled {
   right: 8%;
   height: 3px;
   border-radius: 2px;
-  background: #0a0a0c;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12);
+  background: #3b3b3f;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .wheel-label {

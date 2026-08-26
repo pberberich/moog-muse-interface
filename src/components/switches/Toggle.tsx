@@ -5,16 +5,20 @@ export interface SwitchProps {
   param: Param;
   value: number;
   onChange: (value: number) => void;
-  /** Colored cap, matching the hardware's accent buttons. */
-  accent?: "yellow" | "orange" | "cyan";
+  /** Light-up cap color; undefined renders the red lozenge LED-button. */
+  accent?: "yellow" | "orange" | "cyan" | "white";
 }
 
 /**
- * The button caps are 3D-rendered sprites (scripts/btn_render.py); if the
- * art is missing the CSS-gradient caps remain as the fallback. One probe
- * decides for the whole sprite set.
+ * The hardware has two button families, both of which ARE their own
+ * indicator (no separate LED):
+ *  - small red lozenge buttons that light red when engaged (KB Reset,
+ *    Unipolar, Loop, Velocity, Link, Mute, High Pass…)
+ *  - larger light-up caps in white/yellow/cyan (Hold, Arp On, Timbres)
+ * Caps are 3D-rendered sprites (scripts/btn_render.py); CSS gradients
+ * remain as the fallback when the art is missing.
  */
-const SPRITE_URL = (color: string) => `btn-${color}.png`;
+const SPRITE_URL = (name: string) => `btn-${name}.png`;
 
 type AssetStatus = "loading" | "ok" | "fail";
 const listeners = new Set<() => void>();
@@ -29,7 +33,7 @@ if (typeof Image !== "undefined") {
     spriteStatus = "fail";
     listeners.forEach((l) => l());
   };
-  probe.src = SPRITE_URL("gray");
+  probe.src = SPRITE_URL("red");
 } else {
   spriteStatus = "fail";
 }
@@ -44,26 +48,23 @@ function useButtonSprites(): AssetStatus {
   );
 }
 
-/**
- * Hardware-style panel button: a small gray (or colored) cap with a separate
- * red LED indicator above it, label printed below.
- */
 export function Toggle({ param, value, onChange, accent }: SwitchProps) {
   const on = value >= 64;
   const sprites = useButtonSprites();
-  const classes = ["push-btn"];
-  if (accent) classes.push(`accent-${accent}`);
+  const classes = ["push-btn", accent ? `accent-${accent}` : "lozenge"];
   if (sprites === "ok") classes.push("sprite");
+  // accent caps are white plastic that lights its color from behind: the
+  // unlit sprite is the white cap, the lit one the colored render
+  const spriteName = accent ? (on ? accent : "white") : "red";
   return (
     <div className="control toggle" title={param.description ?? param.name}>
-      <span className={on ? "led-dot on" : "led-dot"} />
       <button
         type="button"
         className={classes.join(" ")}
         style={
           sprites === "ok"
             ? {
-                backgroundImage: `url(${SPRITE_URL(accent ?? "gray")})`,
+                backgroundImage: `url(${SPRITE_URL(spriteName)})`,
                 backgroundSize: "100% 100%"
               }
             : undefined

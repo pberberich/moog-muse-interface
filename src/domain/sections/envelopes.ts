@@ -14,7 +14,7 @@ export const FILTER_ENVELOPE: Section = {
 };
 
 export const AMP_ENVELOPE: Section = {
-  title: "Amplifier Envelope",
+  title: "VCA Envelope",
   params: [
     knob(86, "Attack", 0),
     knob(88, "Decay", 40, "Published chart lists CC 88 as “Delay”; it is the decay stage"),

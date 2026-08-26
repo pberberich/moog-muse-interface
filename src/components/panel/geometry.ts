@@ -36,10 +36,10 @@ export const FRAMES: Frame[] = [
   { title: "Filter 1", x: 1065, y: 14, w: 210, h: 400 },
   { title: "Filter 2", x: 1285, y: 14, w: 215, h: 400 },
   { title: "Filter Envelope", x: 1510, y: 14, w: 235, h: 196 },
-  { title: "Amplifier Envelope", x: 1510, y: 218, w: 235, h: 196 },
+  { title: "VCA Envelope", x: 1510, y: 218, w: 235, h: 196 },
   // top band — right
   { title: "Voices", x: 1755, y: 14, w: 175, h: 400 },
-  { title: "Delay", x: 1940, y: 14, w: 240, h: 400 },
+  { title: "Diffusion Delay", x: 1940, y: 14, w: 240, h: 400 },
   // bottom strip
   { title: "Pitch LFO", x: 20, y: 424, w: 440, h: 164 },
   { title: "Performance", x: 470, y: 424, w: 250, h: 164 },

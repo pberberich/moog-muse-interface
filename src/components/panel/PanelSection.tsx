@@ -57,10 +57,22 @@ export function PanelSection({ section }: { section: Section }) {
   ]
     .filter(Boolean)
     .join(" ");
+  // vertical fader banks lay out one column per fader (4 in the envelopes,
+  // 6 in the MIX block), like the hardware
+  const faderCount =
+    sliders === "v" ? section.params.filter((p) => p.kind === "knob").length : 0;
   return (
     <section className={classes}>
       <h2>{section.title}</h2>
-      <div className="section-controls">
+      {section.subtitle && <div className="section-sub">{section.subtitle}</div>}
+      <div
+        className="section-controls"
+        style={
+          faderCount
+            ? { gridTemplateColumns: `repeat(${faderCount}, minmax(0, 1fr))` }
+            : undefined
+        }
+      >
         {section.params.map((p) => (
           <Control key={p.cc} param={p} sliders={sliders} knobSize={knobSize} />
         ))}

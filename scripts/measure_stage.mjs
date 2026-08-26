@@ -51,6 +51,7 @@ const map = await page.evaluate(() => {
   };
 
   collect(".panel-section > h2", "title");
+  collect(".section-sub", "label");
   collect(".control-label", "label");
   collect(".enum-text", "enum");
   collect(".hslider-name", "sliderName");

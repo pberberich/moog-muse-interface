@@ -140,8 +140,10 @@ def add_text(entry):
     if not body:
         return
     size_px = entry["fontSize"]
-    # crude two-line balance when the box is clearly taller than one line
-    if entry["h"] > size_px * 2.1 and " " in body:
+    # two-line balance when the measured box is taller than one line — soft
+    # wraps in the DOM come back from innerText as plain spaces, but the
+    # wrapped box's height gives them away (~1.4x font vs ~0.9x unwrapped)
+    if entry["h"] > size_px * 1.15 and " " in body:
         words = body.split()
         best, diff = 1, 1e9
         for i in range(1, len(words)):

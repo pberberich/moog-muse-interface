@@ -54,20 +54,31 @@ each frame square. Frame 0 at the top.
 Single sprites, tightly cropped with ~4% transparent margin.
 
 - **`-v`** (cap for vertical faders): wide orientation, ≈ 3:2 aspect
-  (e.g. 300×200). Warm-white/bone plastic rectangular cap, softly beveled
-  edges, one shallow **dark center groove** running across the top face
-  horizontally.
-- **`-h`**: the exact same cap rotated 90° (≈ 200×300, groove vertical).
+  (e.g. 300×200). Warm-white/bone plastic **pill-shaped** cap with large
+  soft bevels — smooth top, no groove (matches the instrument's caps).
+- **`-h`**: the exact same cap rotated 90° (≈ 200×300).
 
-## 4. Optional upgrades (nice-to-have, same global rules)
+## 4. Button caps — `btn-*.png`
+
+Single sprites, tightly cropped with ~4% transparent margin, lit states
+are produced in CSS (dim/glow filters), so deliver each cap **unlit at
+full material brightness**:
+
+| File | Contents | Size |
+| --- | --- | --- |
+| `btn-white.png` | Warm-white molded cap, generous rounded bevels (Hold, FW/BK, Tap) | 300×200 |
+| `btn-yellow.png`, `btn-orange.png`, `btn-cyan.png` | The same cap in its lit color (shown when the button is engaged) | 300×200 |
+| `btn-gray.png` | Dark gray version of the same cap | 300×200 |
+| `btn-red.png` | Small **red lozenge LED-button**: translucent bright-red plastic, rounded-rectangle, ≈ 2:1 | 260×140 |
+| `btn-rocker.png` | Wide dark-gray rocker cap for the option selectors, ≈ 2.6:1 | 400×150 |
+
+## 5. Optional upgrades (nice-to-have, same global rules)
 
 | File | Contents | Size |
 | --- | --- | --- |
 | `knob-strip-big.png` | Same spec as knob-strip; alternate cap style for the two large filter knobs | 512×32768 |
-| `btn-gray.png` / `btn-gray-down.png` | Rectangular gray plastic button cap, up and pressed | 300×170 |
-| `btn-yellow.png`, `btn-orange.png`, `btn-cyan.png` (+`-down`) | Colored caps, same geometry | 300×170 |
 | `led-off.png` / `led-on.png` | Round 3mm LED; `on` = red-orange with soft bloom | 128×128 |
-| `wheel.png` | Pitch/mod wheel front view: black rubber, fine knurling, side highlights | 240×640 |
+| `wheel.png` | Pitch/mod wheel front view: bright ridged metal, side highlights | 240×640 |
 | `key-white.png` / `key-white-down.png` | White key, top view with front lip | 300×1200 |
 | `key-black.png` / `key-black-down.png` | Black key, glossy top | 200×760 |
 | `wood.png` | Walnut end-cheek texture, vertical grain, tileable vertically | 256×2048 |
