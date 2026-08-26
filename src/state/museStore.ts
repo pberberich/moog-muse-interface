@@ -100,6 +100,13 @@ export class MuseStore {
     this.transport.send([0x80 | this.channel, note & 0x7f, 0]);
   }
 
+  /** Pitch bend, normalized -1..1 (0 = center, 14-bit on the wire). */
+  pitchBend(amount: number): void {
+    const clamped = Math.max(-1, Math.min(1, amount));
+    const raw = Math.round(8192 + clamped * 8191);
+    this.transport.send([0xe0 | this.channel, raw & 0x7f, (raw >> 7) & 0x7f]);
+  }
+
   /** Transmit every parameter's current value to the synth. */
   sendAll(): void {
     for (const p of ALL_PARAMS) {

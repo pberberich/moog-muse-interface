@@ -13,8 +13,12 @@ function Control({ param }: { param: Param }) {
 }
 
 export function PanelSection({ section }: { section: Section }) {
+  const weight = section.params.length;
   return (
-    <section className="panel-section">
+    <section
+      className="panel-section"
+      style={{ flexGrow: weight, flexBasis: `${weight * 4.2}rem` }}
+    >
       <h2>{section.title}</h2>
       <div className="section-controls">
         {section.params.map((p) => (

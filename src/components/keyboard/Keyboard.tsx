@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useStore } from "../../state";
 import { isBlackKey, KEY_TO_SEMITONE, NUM_KEYS } from "./layout";
+import { Wheel } from "./Wheel";
 
 export function Keyboard() {
   const store = useStore();
@@ -82,8 +83,13 @@ export function Keyboard() {
         </label>
         <span className="keyboard-hint">Play with A–L keys · Z/X shifts octave</span>
       </div>
-      <div className="keyboard">
-        {keys.map((note) => (
+      <div className="keybed">
+        <div className="wheels">
+          <Wheel mode="pitch" />
+          <Wheel mode="mod" />
+        </div>
+        <div className="keyboard">
+          {keys.map((note) => (
           <button
             key={note}
             type="button"
@@ -97,9 +103,10 @@ export function Keyboard() {
             }}
             onPointerUp={() => noteOff(note)}
             onPointerCancel={() => noteOff(note)}
-            aria-label={`Note ${note}`}
-          />
-        ))}
+              aria-label={`Note ${note}`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

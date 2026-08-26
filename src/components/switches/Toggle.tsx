@@ -6,20 +6,20 @@ export interface SwitchProps {
   onChange: (value: number) => void;
 }
 
-/** Illuminated on/off button, Moog panel style. */
+/** Backlit rectangular panel button, Muse style: glows amber when engaged. */
 export function Toggle({ param, value, onChange }: SwitchProps) {
   const on = value >= 64;
   return (
     <div className="control toggle" title={param.description ?? param.name}>
+      <span className="control-label">{param.name}</span>
       <button
         type="button"
         className={on ? "toggle-btn on" : "toggle-btn"}
         aria-pressed={on}
         onClick={() => onChange(on ? 0 : 127)}
       >
-        <span className="led" />
+        <span className="toggle-lens" />
       </button>
-      <span className="control-label">{param.name}</span>
     </div>
   );
 }
