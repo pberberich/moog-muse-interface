@@ -215,52 +215,37 @@ button:disabled {
   margin-left: auto;
 }
 
-/* ---------- panel rows + silkscreen section frames ---------- */
+/* ---------- fixed-coordinate faceplate stage ---------- */
 
-.panel {
-  display: grid;
-  grid-template-columns: repeat(27, 1fr);
-  gap: 0.8rem;
-  padding: 1.1rem 0.2rem 0.9rem;
-  align-items: stretch;
+.stage-wrap {
+  position: relative;
+  margin: 0.9rem 0 0.6rem;
+  overflow: hidden;
 }
 
-.panel-col {
+.stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+}
+
+.stage-col {
+  position: absolute;
+  top: 14px;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  min-width: 0;
+  gap: 10px;
 }
 
-.panel-col > .panel-section,
-.panel-col > .section-pair {
-  flex: 0 0 auto;
-}
-
-.panel-col > :last-child {
-  flex: 1 0 auto;
-}
-
-.section-pair {
-  display: flex;
-  gap: 0.8rem;
-  align-items: stretch;
-}
-
-.section-pair > .panel-section {
-  flex: 1;
-  min-width: 0;
-}
-
-.section-pair > .panel-section h2 {
-  font-size: 0.48rem;
-  letter-spacing: 0.06em;
+.stage-col > .panel-section:last-child {
+  flex-grow: 1;
 }
 
 .brand-plate {
   border: 1px solid var(--silk);
   border-radius: 7px;
-  padding: 0.5rem 0.8rem;
+  padding: 0.4rem 0.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -285,12 +270,9 @@ button:disabled {
 }
 
 .panel-section {
-  /* flex-grow/basis set inline, proportional to control count */
-  flex-shrink: 1;
-  min-width: 0;
   border: 1px solid var(--silk);
   border-radius: 7px;
-  padding: 0.9rem 0.8rem 0.45rem;
+  padding: 0.9rem 0.4rem 0.45rem;
   position: relative;
 }
 
@@ -332,7 +314,7 @@ button:disabled {
 }
 
 .control-label {
-  font-size: 0.54rem;
+  font-size: 0.5rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.13em;
@@ -433,6 +415,18 @@ button:disabled {
   margin-top: 0.15rem;
 }
 
+.enum-options.vertical {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+}
+
+.enum-options.vertical .enum-btn {
+  flex-direction: row;
+  gap: 0.35rem;
+  padding: 0.1rem 0.2rem;
+}
+
 .enum-btn {
   display: flex;
   flex-direction: column;
@@ -489,8 +483,8 @@ button:disabled {
 }
 
 .sliders-v .vslider .control-label {
-  font-size: 0.46rem;
-  letter-spacing: 0.05em;
+  font-size: 0.43rem;
+  letter-spacing: 0.02em;
 }
 
 .sliders-v .toggle {
@@ -820,16 +814,7 @@ button:disabled {
 
 /* ---------- responsive / touch (iPad) ---------- */
 
-@media (max-width: 1150px) {
-  .panel {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .panel-col > .panel-section {
-    flex: none;
-  }
-}
+/* The stage scales itself uniformly, so no reflow breakpoint is needed. */
 
 @media (pointer: coarse) {
   .control {
