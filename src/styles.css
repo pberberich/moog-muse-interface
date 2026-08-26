@@ -240,6 +240,51 @@ button:disabled {
   transform-origin: top left;
 }
 
+/* 1:1 photo underlay (public/panel-photo.png): the photograph becomes the
+   plate; drawn framing fades out, controls composite on top. */
+.stage-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+}
+
+.stage.has-photo .panel-section,
+.stage.has-photo .brand-plate {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.stage.has-photo .panel-section > h2,
+.stage.has-photo .brand-plate,
+.stage.has-photo .moog-badge,
+.stage.has-photo .control-label,
+.stage.has-photo .knob-tick,
+.stage.has-photo .enum-text,
+.stage.has-photo .hslider-name {
+  opacity: 0;
+}
+
+/* calibration: both layers visible, frame outlines shown, to align
+   geometry.ts against the photograph (append ?calibrate to the URL) */
+.stage.calibrate .panel-section {
+  border-color: rgba(255, 80, 60, 0.8);
+}
+
+.stage.calibrate .panel-section > h2,
+.stage.calibrate .control-label,
+.stage.calibrate .knob-tick,
+.stage.calibrate .enum-text,
+.stage.calibrate .hslider-name {
+  opacity: 0.6;
+}
+
+.stage.calibrate .stage-photo {
+  opacity: 0.55;
+}
+
 .frame {
   position: absolute;
   display: flex;

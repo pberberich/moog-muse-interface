@@ -93,6 +93,19 @@ native/                JUCE CMake project (AU / VST3 / Standalone / iOS)
 Run the suite with `npm test` (Vitest + Testing Library; 44 tests covering the
 parameter tables, MIDI transports, store behavior, persistence, and controls).
 
+## 1:1 photo mode
+
+For true photorealism the panel can render an actual photograph of the
+instrument underneath the controls. Drop a photo at `public/panel-photo.png`
+and it becomes the plate: the drawn framing and silkscreen fade out, and the
+interactive controls composite on top. Append `?calibrate` to the URL to see
+both layers half-transparent with red frame outlines while aligning
+`src/components/panel/geometry.ts` to the photograph.
+
+Photo spec for best results: shot straight-on (camera perpendicular to the
+faceplate, no keyboard angle), evenly lit without glare, cropped to exactly
+the panel area between the wood cheeks, at 3000px wide or more.
+
 ## MIDI mapping notes
 
 CC assignments follow the Muse MIDI implementation chart from Moog's firmware
