@@ -130,9 +130,10 @@ export function Knob({ param, value, onChange, size = VB, className }: KnobProps
     );
   });
 
-  // pointer over the static base: from the cap center out to the skirt edge
+  // pointer over the static base: from the aluminum insert's rim out to the
+  // skirt edge, so the line rides the black cap ring like the hardware
   const [px, py] = polar(angle, 21.8);
-  const [ix, iy] = polar(angle, 5.5);
+  const [ix, iy] = polar(angle, 10.2);
 
   return (
     <div

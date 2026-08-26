@@ -42,8 +42,11 @@ def principled(name, base, rough, clearcoat=0.0, metallic=0.0):
 
 
 rubber = principled("skirt", (0.012, 0.012, 0.013), 0.55)
-plastic = principled("cap", (0.016, 0.016, 0.018), 0.32, clearcoat=0.45)
+plastic = principled("cap", (0.016, 0.016, 0.018), 0.27, clearcoat=0.62)
 white = principled("pointer", (0.85, 0.83, 0.78), 0.35)
+# brushed-aluminum insert on the cap top, the classic Moog knob signature
+alu = principled("alu", (0.72, 0.72, 0.74), 0.32, metallic=1.0)
+alu_rim = principled("alu_rim", (0.55, 0.55, 0.58), 0.28, metallic=1.0)
 
 # ---------- knob geometry (parented to a rotator empty) ----------
 
@@ -71,9 +74,14 @@ skirt.scale = (1.0, 1.0, 1.0)
 # cap: taller drum with generous bevel so it reads as a domed top
 cap = add_cyl("cap", 0.64, 0.5, 0.55, plastic, bevel=0.16)
 
+# aluminum insert: a thin turned-metal disc set into the cap top, with a
+# slightly darker chamfered rim ring around it (Minimoog-style)
+add_cyl("alu_rim", 0.44, 0.02, 0.805, alu_rim, bevel=0.008)
+add_cyl("alu_disc", 0.40, 0.024, 0.812, alu, bevel=0.01)
+
 # pointer: thin white bar inset across the cap top, running to its edge
 if POINTER:
-    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0.29, 0.815))
+    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, 0.29, 0.832))
     ptr = bpy.context.active_object
     ptr.name = "pointer"
     ptr.scale = (0.055, 0.33, 0.012)
@@ -106,7 +114,7 @@ def area_light(name, loc, rot, energy, size):
 
 area_light("key", (-2.2, 2.6, 4.0), (math.radians(-28), math.radians(-24), 0), 320, 3.2)
 area_light("fill", (2.8, -1.4, 3.0), (math.radians(18), math.radians(34), 0), 70, 4.0)
-area_light("rim", (0.4, -3.0, 1.4), (math.radians(68), 0, 0), 45, 2.0)
+area_light("rim", (0.4, -3.0, 1.4), (math.radians(68), 0, 0), 72, 2.0)
 
 world = bpy.data.worlds.new("world")
 world.use_nodes = True

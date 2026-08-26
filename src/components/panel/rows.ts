@@ -18,8 +18,14 @@ export const DENSE_SECTIONS = new Set([
   "Arp / Clock"
 ]);
 
-/** Bottom-strip sections sit slightly tighter than the default. */
-export const COMPACT_SECTIONS = new Set(["Pitch LFO", "Performance", "Sync / FM"]);
+/** Narrow sections sit slightly tighter so knob pairs fit side by side. */
+export const COMPACT_SECTIONS = new Set([
+  "Pitch LFO",
+  "Performance",
+  "Sync / FM",
+  "LFO 1",
+  "LFO 2"
+]);
 
 /** Colored button caps, matching the hardware's accent buttons. */
 export const ACCENT_CCS: Record<number, "yellow" | "orange" | "cyan"> = {
