@@ -18,9 +18,11 @@ Muse responds; turn a knob on the Muse and the screen follows.
 - **Bidirectional sync** — incoming CCs (from the Muse or a controller) update
   the on-screen controls in real time
 - **Patch librarian** — save/load patches locally, JSON import/export,
-  one-click "Send all" to push the whole panel to the synth, init patch
+  one-click "Send all" to push the whole panel to the synth, init patch,
+  and four curated starter presets (Warm Pad, Muse Bass, Sync Lead, FM Keys)
 - **Playable keyboard** — on-screen touch keyboard plus computer-keyboard
-  playing (`A`–`L` keys, `Z`/`X` to shift octaves)
+  playing (`A`–`L` keys, `Z`/`X` to shift octaves), velocity slider, and a
+  Panic button (all sound off / all notes off)
 - **Runs anywhere** — plain web app (Web MIDI), installable PWA with a
   touch-friendly layout for tablets, and native **AU / VST3 / Standalone**
   builds via a thin JUCE WebView wrapper (see [`native/`](native/README.md))
