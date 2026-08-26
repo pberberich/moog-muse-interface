@@ -1,7 +1,7 @@
 import { Param, Section } from "../../domain";
 import { useStore } from "../../state";
 import { Knob } from "../knob";
-import { HSlider } from "../slider";
+import { HSlider, VSlider } from "../slider";
 import { EnumControl, Toggle } from "../switches";
 import {
   ACCENT_CCS,
@@ -13,7 +13,7 @@ import {
 
 interface ControlProps {
   param: Param;
-  sliders?: "h";
+  sliders?: "v" | "h";
   knobSize: number;
 }
 
@@ -23,6 +23,7 @@ function Control({ param, sliders, knobSize }: ControlProps) {
   const onChange = (v: number) => store.setValue(param.cc, v);
   if (param.kind === "knob") {
     if (sliders === "h") return <HSlider param={param} value={value} onChange={onChange} />;
+    if (sliders === "v") return <VSlider param={param} value={value} onChange={onChange} />;
     const big = BIG_KNOB_CCS.has(param.cc);
     return (
       <Knob
@@ -49,7 +50,8 @@ export function PanelSection({ section }: { section: Section }) {
   const knobSize = dense ? 40 : compact ? 52 : 60;
   const classes = [
     "panel-section",
-    sliders ? "sliders-h" : "",
+    sliders === "h" ? "sliders-h" : "",
+    sliders === "v" ? "sliders-v" : "",
     dense ? "dense" : "",
     compact ? "compact" : ""
   ]

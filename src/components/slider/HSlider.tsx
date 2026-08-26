@@ -54,7 +54,10 @@ export function HSlider({ param, value, onChange }: SliderProps) {
         <span className="hslider-slot" />
         <span
           className="hslider-thumb"
-          style={{ left: `calc((100% - 14px) * ${value / 127})` }}
+          style={{
+            left: `calc((100% - 16px) * ${value / 127})`,
+            backgroundImage: "url(fader-cap-h.png)"
+          }}
         />
       </div>
       <span className="hslider-name">{param.name}</span>

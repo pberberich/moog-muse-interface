@@ -1,9 +1,10 @@
 import { Section, SECTIONS } from "../../domain";
 
-/** Sections whose knob-type params render as horizontal faders (hardware). */
-export const SLIDER_SECTIONS: Record<string, "h"> = {
-  "Filter Envelope": "h",
-  "Amplifier Envelope": "h",
+/** Sections whose knob-type params render as faders, like the hardware:
+ *  vertical for the envelope banks, horizontal for the MIX block. */
+export const SLIDER_SECTIONS: Record<string, "v" | "h"> = {
+  "Filter Envelope": "v",
+  "Amplifier Envelope": "v",
   Mixer: "h"
 };
 

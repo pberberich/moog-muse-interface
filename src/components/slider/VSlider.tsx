@@ -61,7 +61,10 @@ export function VSlider({ param, value, onChange }: SliderProps) {
         <span className="vslider-slot" />
         <span
           className="vslider-thumb"
-          style={{ bottom: `calc((100% - 16px) * ${value / 127})` }}
+          style={{
+            bottom: `calc((100% - 18px) * ${value / 127})`,
+            backgroundImage: "url(fader-cap-v.png)"
+          }}
         />
       </div>
       <span className="control-label">{param.name}</span>
