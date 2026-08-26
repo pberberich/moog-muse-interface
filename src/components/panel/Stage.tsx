@@ -5,13 +5,14 @@ import { BRAND_FRAME, FRAMES, MOOG_FRAME, PROGRAMMER_FRAME, STAGE } from "./geom
 import { sectionByTitle } from "./rows";
 
 /**
- * 1:1 photo mode: when public/panel-photo.png exists (a straight-on,
- * high-resolution photograph of the faceplate), it renders underneath the
- * controls and the drawn framing fades out. Append ?calibrate to the URL to
- * see both layers half-transparent with frame outlines while aligning
- * geometry.ts to the photograph.
+ * Plate underlay, first source that loads wins:
+ *  - panel-photo.png: a straight-on photograph of the real faceplate
+ *    (1:1 photo mode; ?calibrate overlays both layers for alignment)
+ *  - panel-plate.png: the Blender-baked 3D plate (scripts/plate_render.py),
+ *    regenerated from the DOM via scripts/measure_stage.mjs
+ * The drawn framing/silkscreen fades out when an underlay is active.
  */
-const PANEL_PHOTO = "panel-photo.png";
+const PLATE_SOURCES = ["panel-photo.png", "panel-plate.png"];
 
 const frameStyle = (f: { x: number; y: number; w: number; h: number }) => ({
   left: f.x,
@@ -29,6 +30,7 @@ export function Stage() {
   const wrap = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [hasPhoto, setHasPhoto] = useState(false);
+  const [sourceIndex, setSourceIndex] = useState(0);
   const calibrate =
     typeof window !== "undefined" && window.location.search.includes("calibrate");
 
@@ -55,14 +57,16 @@ export function Stage() {
         className={stageClasses}
         style={{ width: STAGE.w, height: STAGE.h, transform: `scale(${scale})` }}
       >
-        <img
-          className="stage-photo"
-          src={PANEL_PHOTO}
-          alt=""
-          aria-hidden="true"
-          onLoad={() => setHasPhoto(true)}
-          onError={(e) => (e.currentTarget.style.display = "none")}
-        />
+        {sourceIndex < PLATE_SOURCES.length && (
+          <img
+            className="stage-photo"
+            src={PLATE_SOURCES[sourceIndex]}
+            alt=""
+            aria-hidden="true"
+            onLoad={() => setHasPhoto(true)}
+            onError={() => setSourceIndex((i) => i + 1)}
+          />
+        )}
         <div className="brand-plate" style={frameStyle(BRAND_FRAME)}>
           <span className="brand-plate-name">MUSE</span>
           <span className="brand-plate-tag">
