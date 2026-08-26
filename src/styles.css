@@ -42,6 +42,7 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   padding: 1.4rem 0.8rem 2rem;
   background:
     radial-gradient(120% 90% at 50% 0%, #171512 0%, var(--room) 60%);
@@ -111,6 +112,7 @@ body {
 /* ---------- top rail / toolbar ---------- */
 
 .midi-toolbar {
+  position: relative;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -119,27 +121,26 @@ body {
   border-bottom: 1px solid rgba(232, 228, 216, 0.14);
 }
 
-.brand {
+.toolbar-controls {
   display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  margin-right: 0.8rem;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-left: auto;
 }
 
-.brand-moog {
-  font-size: 1.85rem;
+/* big moog script centered on the rail, like the hardware's back panel */
+.moog-script {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -54%);
+  font-size: 1.9rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
   text-transform: lowercase;
+  letter-spacing: 0.01em;
   color: var(--ink);
-  line-height: 1;
-}
-
-.brand-sub {
-  font-size: 0.56rem;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
+  pointer-events: none;
 }
 
 .midi-toolbar label {
@@ -230,43 +231,61 @@ button:disabled {
   transform-origin: top left;
 }
 
-.stage-col {
+.frame {
   position: absolute;
-  top: 14px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 
-.stage-col > .panel-section:last-child {
-  flex-grow: 1;
+.frame > .panel-section,
+.frame > .patch-library {
+  flex: 1;
+  min-width: 0;
+}
+
+.moog-frame {
+  position: absolute;
+  display: grid;
+  place-items: center;
+}
+
+.moog-badge {
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-transform: lowercase;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  padding: 0.05rem 0.8rem 0.2rem;
 }
 
 .brand-plate {
+  position: absolute;
   border: 1px solid var(--silk);
   border-radius: 7px;
-  padding: 0.4rem 0.6rem;
+  padding: 0.3rem 0.6rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.8rem;
+  gap: 0.7rem;
+  overflow: hidden;
 }
 
 .brand-plate-name {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: 0.28em;
   color: var(--ink);
 }
 
 .brand-plate-tag {
-  font-size: 0.5rem;
+  font-size: 0.4rem;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--ink-dim);
   line-height: 1.5;
   border-left: 1px solid var(--silk);
-  padding-left: 0.8rem;
+  padding-left: 0.7rem;
 }
 
 .panel-section {
@@ -308,7 +327,7 @@ button:disabled {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 4rem;
+  width: 3.75rem;
   gap: 0.14rem;
   padding-top: 0.1rem;
 }
@@ -326,14 +345,61 @@ button:disabled {
   align-items: flex-end;
 }
 
-/* value readout appears only while interacting, keeping the silkscreen clean */
+/* frames stretch their content evenly, like the hardware's full frames */
+.frame > .panel-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.frame .section-controls {
+  flex: 1;
+  align-content: space-evenly;
+}
+
+/* dense sections (mod block, arp) pack smaller controls like the hardware */
+.dense .control {
+  width: 3.1rem;
+}
+
+.dense .section-controls {
+  row-gap: 0.1rem;
+}
+
+.compact .control {
+  width: 3.4rem;
+}
+
+.dense .control-label {
+  font-size: 0.44rem;
+  letter-spacing: 0.06em;
+}
+
+/* the oversized filter knob mounts on top, centered, like the hardware */
+.control.lead {
+  flex-basis: 100%;
+  order: -1;
+}
+
+/* value readout overlays while interacting, keeping the silkscreen clean */
+.control {
+  position: relative;
+}
+
 .control-value {
+  position: absolute;
+  bottom: -0.55rem;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 0.6rem;
   color: var(--amber);
+  background: var(--panel);
+  padding: 0 0.25rem;
+  border-radius: 3px;
   opacity: 0;
   transition: opacity 120ms ease;
   font-variant-numeric: tabular-nums;
-  min-height: 0.85rem;
+  pointer-events: none;
+  z-index: 3;
 }
 
 .control:hover .control-value,
@@ -374,32 +440,50 @@ button:disabled {
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.9));
 }
 
-/* backlit rectangular switch */
+/* hardware-style button: red LED dot above a small gray (or colored) cap */
 
-.toggle-btn {
-  width: 2.35rem;
-  height: 1.45rem;
-  padding: 2px;
-  border-radius: 4px;
-  background: linear-gradient(180deg, #2c2c30, #161619);
-  display: grid;
-  place-items: stretch;
-  margin-top: 0.2rem;
+.led-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3a2117;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.9);
 }
 
-.toggle-lens {
-  border-radius: 2.5px;
-  background: linear-gradient(180deg, #26262a 0%, #101013 100%);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.9);
+.led-dot.on {
+  background: radial-gradient(circle at 38% 32%, #ffc4a3, var(--led) 55%, #8e2506);
+  box-shadow: 0 0 7px rgba(255, 92, 31, 0.9), 0 0 2px var(--led);
 }
 
-.toggle-btn.on .toggle-lens {
-  background:
-    radial-gradient(60% 70% at 50% 45%, #ffb49a 0%, var(--led) 45%, #a1290a 100%);
-  box-shadow:
-    0 0 10px rgba(255, 92, 31, 0.65),
-    0 0 3px rgba(255, 92, 31, 0.9),
-    inset 0 1px 2px rgba(255, 255, 255, 0.45);
+.push-btn {
+  width: 30px;
+  height: 17px;
+  padding: 0;
+  border-radius: 3px;
+  border: 1px solid #000;
+  background: linear-gradient(180deg, #6a6a70 0%, #4a4a50 45%, #333338 100%);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.push-btn:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+
+.push-btn[aria-pressed="true"] {
+  transform: translateY(1px);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7), inset 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.push-btn.accent-yellow {
+  background: linear-gradient(180deg, #ffe9a0 0%, #f5c93e 50%, #c99b18 100%);
+}
+
+.push-btn.accent-orange {
+  background: linear-gradient(180deg, #ffc490 0%, #f5913e 50%, #c66418 100%);
+}
+
+.push-btn.accent-cyan {
+  background: linear-gradient(180deg, #d8f3f7 0%, #9fd8e8 50%, #5da4bb 100%);
 }
 
 /* LED ladder selector */
@@ -468,105 +552,45 @@ button:disabled {
   color: var(--ink);
 }
 
-/* ---------- faders (envelopes vertical, mixer horizontal) ---------- */
+/* ---------- horizontal faders (MIX block, envelope sections) ---------- */
 
-/* envelope banks: ADSR faders in a fixed 4-across rank like the hardware */
-.sliders-v .section-controls {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  justify-items: center;
-  row-gap: 0.5rem;
-}
-
-.sliders-v .vslider {
-  width: 100%;
-}
-
-.sliders-v .vslider .control-label {
-  font-size: 0.43rem;
-  letter-spacing: 0.02em;
-}
-
-.sliders-v .toggle {
-  grid-column: span 2;
-}
-
-.vslider {
-  width: 2.55rem;
-}
-
-.vslider-track {
-  position: relative;
-  width: 1.5rem;
-  height: 5.4rem;
-  touch-action: none;
-  cursor: ns-resize;
-  outline: none;
-}
-
-.vslider-track:focus-visible,
-.hslider-track:focus-visible {
-  box-shadow: 0 0 0 2px var(--amber);
-  border-radius: 4px;
-}
-
-.vslider-slot {
-  position: absolute;
-  left: 50%;
-  top: 2px;
-  bottom: 2px;
-  width: 4px;
-  transform: translateX(-50%);
-  border-radius: 2px;
-  background: #08080a;
-  box-shadow: inset 0 1px 3px #000, 0 1px 0 rgba(255, 255, 255, 0.07);
-}
-
-.vslider-thumb {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1.4rem;
-  height: 16px;
-  border-radius: 3px;
-  background: linear-gradient(180deg, #3a3a3f 0%, #141416 45%, #060607 100%);
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  pointer-events: none;
-}
-
-.vslider-thumb::after,
-.hslider-thumb::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  background: #f4f1e6;
-  border-radius: 1px;
-}
-
-.vslider-thumb::after {
-  width: 70%;
-  height: 2px;
+.sliders-h .section-controls {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  align-content: flex-start;
+  gap: 7px 10px;
 }
 
 .hslider {
-  width: 8rem;
+  flex: 1 0 100%;
+  flex-direction: row;
+  width: auto;
+  gap: 8px;
+  align-items: center;
+  padding-top: 0;
 }
 
 .hslider-track {
   position: relative;
-  width: 7.4rem;
-  height: 2rem;
+  flex: 1;
+  min-width: 0;
+  height: 20px;
   touch-action: none;
   cursor: ew-resize;
   outline: none;
 }
 
+.hslider-track:focus-visible {
+  box-shadow: 0 0 0 2px var(--amber);
+  border-radius: 4px;
+}
+
 .hslider-slot {
   position: absolute;
   top: 50%;
-  left: 2px;
-  right: 2px;
+  left: 1px;
+  right: 1px;
   height: 4px;
   transform: translateY(-50%);
   border-radius: 2px;
@@ -578,40 +602,54 @@ button:disabled {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 16px;
-  height: 1.7rem;
-  border-radius: 3px;
+  width: 14px;
+  height: 19px;
+  border-radius: 2.5px;
   background: linear-gradient(90deg, #3a3a3f 0%, #141416 45%, #060607 100%);
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.8), inset 1px 0 0 rgba(255, 255, 255, 0.12);
   pointer-events: none;
 }
 
 .hslider-thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
   width: 2px;
   height: 70%;
+  background: #f4f1e6;
+  border-radius: 1px;
 }
 
-/* ---------- patch library tray ---------- */
+.hslider-name {
+  flex: 0 0 74px;
+  font-size: 0.48rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--silk-strong);
+  text-align: left;
+  line-height: 1.15;
+}
+
+/* ---------- programmer (patch library inside the bottom strip) ---------- */
 
 .patch-library {
-  border-top: 1px solid rgba(232, 228, 216, 0.14);
-  padding: 0.55rem 0.6rem 0.6rem;
   display: flex;
   align-items: center;
+  align-content: center;
   flex-wrap: wrap;
   gap: 0.45rem 0.8rem;
-}
-
-.patch-library h2 {
-  font-size: 0.58rem;
-  text-transform: uppercase;
-  letter-spacing: 0.28em;
-  color: var(--silk-strong);
-  margin-right: 0.2rem;
+  padding: 0.9rem 0.8rem 0.5rem;
 }
 
 .preset-heading {
   margin-left: 0.6rem;
+  font-size: 0.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--silk-strong);
 }
 
 .patch-save-row {

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Keyboard, MidiToolbar, PatchLibrary, Stage } from "./components";
+import { Keyboard, MidiToolbar, Stage } from "./components";
 import { store } from "./state";
 
 export default function App() {
@@ -18,7 +18,6 @@ export default function App() {
           <i className="screw br" />
           <MidiToolbar />
           <Stage />
-          <PatchLibrary />
           <Keyboard />
         </div>
         <div className="cheek right" />

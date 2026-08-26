@@ -4,22 +4,26 @@ export interface SwitchProps {
   param: Param;
   value: number;
   onChange: (value: number) => void;
+  /** Colored cap, matching the hardware's accent buttons. */
+  accent?: "yellow" | "orange" | "cyan";
 }
 
-/** Backlit rectangular panel button, Muse style: glows amber when engaged. */
-export function Toggle({ param, value, onChange }: SwitchProps) {
+/**
+ * Hardware-style panel button: a small gray (or colored) cap with a separate
+ * red LED indicator above it, label printed below.
+ */
+export function Toggle({ param, value, onChange, accent }: SwitchProps) {
   const on = value >= 64;
   return (
     <div className="control toggle" title={param.description ?? param.name}>
-      <span className="control-label">{param.name}</span>
+      <span className={on ? "led-dot on" : "led-dot"} />
       <button
         type="button"
-        className={on ? "toggle-btn on" : "toggle-btn"}
+        className={accent ? `push-btn accent-${accent}` : "push-btn"}
         aria-pressed={on}
         onClick={() => onChange(on ? 0 : 127)}
-      >
-        <span className="toggle-lens" />
-      </button>
+      />
+      <span className="control-label">{param.name}</span>
     </div>
   );
 }

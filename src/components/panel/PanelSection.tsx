@@ -1,33 +1,58 @@
 import { Param, Section } from "../../domain";
 import { useStore } from "../../state";
 import { Knob } from "../knob";
-import { HSlider, VSlider } from "../slider";
+import { HSlider } from "../slider";
 import { EnumControl, Toggle } from "../switches";
-import { BIG_KNOB_CCS, SLIDER_SECTIONS } from "./rows";
+import {
+  ACCENT_CCS,
+  BIG_KNOB_CCS,
+  COMPACT_SECTIONS,
+  DENSE_SECTIONS,
+  SLIDER_SECTIONS
+} from "./rows";
 
-function Control({ param, sliders }: { param: Param; sliders?: "v" | "h" }) {
+interface ControlProps {
+  param: Param;
+  sliders?: "h";
+  knobSize: number;
+}
+
+function Control({ param, sliders, knobSize }: ControlProps) {
   const store = useStore();
   const value = store.getValue(param.cc);
   const onChange = (v: number) => store.setValue(param.cc, v);
   if (param.kind === "knob") {
-    if (sliders === "v") return <VSlider param={param} value={value} onChange={onChange} />;
     if (sliders === "h") return <HSlider param={param} value={value} onChange={onChange} />;
+    const big = BIG_KNOB_CCS.has(param.cc);
     return (
       <Knob
         param={param}
         value={value}
         onChange={onChange}
-        size={BIG_KNOB_CCS.has(param.cc) ? 84 : 64}
+        size={big ? 88 : knobSize}
+        className={big ? "lead" : undefined}
       />
     );
   }
-  if (param.kind === "toggle") return <Toggle param={param} value={value} onChange={onChange} />;
+  if (param.kind === "toggle") {
+    return (
+      <Toggle param={param} value={value} onChange={onChange} accent={ACCENT_CCS[param.cc]} />
+    );
+  }
   return <EnumControl param={param} value={value} onChange={onChange} />;
 }
 
 export function PanelSection({ section }: { section: Section }) {
   const sliders = SLIDER_SECTIONS[section.title];
-  const classes = ["panel-section", sliders === "v" ? "sliders-v" : "", sliders === "h" ? "sliders-h" : ""]
+  const dense = DENSE_SECTIONS.has(section.title);
+  const compact = COMPACT_SECTIONS.has(section.title);
+  const knobSize = dense ? 40 : compact ? 52 : 60;
+  const classes = [
+    "panel-section",
+    sliders ? "sliders-h" : "",
+    dense ? "dense" : "",
+    compact ? "compact" : ""
+  ]
     .filter(Boolean)
     .join(" ");
   return (
@@ -35,7 +60,7 @@ export function PanelSection({ section }: { section: Section }) {
       <h2>{section.title}</h2>
       <div className="section-controls">
         {section.params.map((p) => (
-          <Control key={p.cc} param={p} sliders={sliders} />
+          <Control key={p.cc} param={p} sliders={sliders} knobSize={knobSize} />
         ))}
       </div>
     </section>

@@ -1,32 +1,51 @@
 /**
- * Fixed-coordinate faceplate geometry, traced from reference photography of
- * the hardware. Column x-positions and widths are fixed stage units (the
- * panel's visual signature); section heights flow to their contents. The
- * whole stage scales uniformly, so geometry never reflows.
+ * Faceplate geometry traced from reference photography of the hardware.
+ * All values are fixed stage units; the plate scales uniformly, so the
+ * proportions never reflow.
  *
- * Hardware flow, left to right: LFO stack · tall modulation column ·
- * oscillator towers · center MUSE plate / MIX faders / arp · dual filters ·
- * envelope fader banks · voice control · delay.
+ * The panel is two bands, like the instrument:
+ *  - tall top band: LFO stack · modulation oscillator block · oscillator
+ *    towers · center MUSE plate / MIX faders / arp · dual filters ·
+ *    envelope slider blocks · voices · delay
+ *  - short bottom strip: pitch LFO · performance controllers · sync/FM ·
+ *    programmer · moog badge
  */
 
-export interface StageColumn {
+export interface Frame {
+  title: string;
   x: number;
+  y: number;
   w: number;
-  /** Section titles stacked top to bottom; "@brand" is the MUSE nameplate. */
-  titles: string[];
+  h: number;
 }
 
-export const STAGE_W = 1760;
+export const STAGE = { w: 2200, h: 588 };
 
-export const COLUMNS: StageColumn[] = [
-  { x: 10, w: 150, titles: ["LFO 1", "LFO 2", "Pitch LFO"] },
-  { x: 168, w: 200, titles: ["Modulation Oscillator", "Mod Routing"] },
-  { x: 376, w: 150, titles: ["Oscillator 1", "Sync / FM"] },
-  { x: 534, w: 150, titles: ["Oscillator 2", "Performance"] },
-  { x: 692, w: 210, titles: ["@brand", "Mixer", "Arp / Clock"] },
-  { x: 910, w: 168, titles: ["Filter 1"] },
-  { x: 1086, w: 168, titles: ["Filter 2"] },
-  { x: 1262, w: 180, titles: ["Filter Envelope", "Amplifier Envelope"] },
-  { x: 1450, w: 148, titles: ["Voices"] },
-  { x: 1606, w: 144, titles: ["Delay"] }
+export const FRAMES: Frame[] = [
+  // top band — left
+  { title: "LFO 1", x: 20, y: 14, w: 145, h: 196 },
+  { title: "LFO 2", x: 20, y: 218, w: 145, h: 196 },
+  { title: "Modulation Oscillator", x: 175, y: 14, w: 265, h: 150 },
+  { title: "Mod Routing", x: 175, y: 172, w: 265, h: 242 },
+  { title: "Oscillator 1", x: 450, y: 14, w: 185, h: 400 },
+  { title: "Oscillator 2", x: 645, y: 14, w: 185, h: 400 },
+  // top band — center (below the MUSE nameplate)
+  { title: "Mixer", x: 840, y: 66, w: 215, h: 172 },
+  { title: "Arp / Clock", x: 840, y: 246, w: 215, h: 168 },
+  // top band — filters and envelopes
+  { title: "Filter 1", x: 1065, y: 14, w: 210, h: 400 },
+  { title: "Filter 2", x: 1285, y: 14, w: 215, h: 400 },
+  { title: "Filter Envelope", x: 1510, y: 14, w: 235, h: 196 },
+  { title: "Amplifier Envelope", x: 1510, y: 218, w: 235, h: 196 },
+  // top band — right
+  { title: "Voices", x: 1755, y: 14, w: 175, h: 400 },
+  { title: "Delay", x: 1940, y: 14, w: 240, h: 400 },
+  // bottom strip
+  { title: "Pitch LFO", x: 20, y: 424, w: 440, h: 150 },
+  { title: "Performance", x: 470, y: 424, w: 270, h: 150 },
+  { title: "Sync / FM", x: 750, y: 424, w: 220, h: 150 }
 ];
+
+export const BRAND_FRAME = { x: 840, y: 14, w: 215, h: 44 };
+export const PROGRAMMER_FRAME = { x: 980, y: 424, w: 1010, h: 150 };
+export const MOOG_FRAME = { x: 2000, y: 424, w: 180, h: 150 };

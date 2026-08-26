@@ -35,7 +35,7 @@ export function PatchLibrary() {
   };
 
   return (
-    <aside className="patch-library">
+    <aside className="patch-library panel-section">
       <h2>Programmer</h2>
       <div className="patch-save-row">
         <input
@@ -72,7 +72,7 @@ export function PatchLibrary() {
           </li>
         ))}
       </ul>
-      <h2 className="preset-heading">Starter Presets</h2>
+      <span className="preset-heading">Starter Presets</span>
       <ul className="patch-list">
         {PRESETS.map((p) => (
           <li key={p.name}>
@@ -106,7 +106,6 @@ export function PatchLibrary() {
           }}
         />
       </div>
-      <span className="moog-badge">moog</span>
     </aside>
   );
 }

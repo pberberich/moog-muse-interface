@@ -1,74 +1,66 @@
 import { useEffect, useRef, useState } from "react";
+import { PatchLibrary } from "../patch-library";
 import { PanelSection } from "./PanelSection";
-import { COLUMNS, STAGE_W } from "./geometry";
+import { BRAND_FRAME, FRAMES, MOOG_FRAME, PROGRAMMER_FRAME, STAGE } from "./geometry";
 import { sectionByTitle } from "./rows";
 
-function BrandPlate() {
-  return (
-    <div className="brand-plate">
-      <span className="brand-plate-name">MUSE</span>
-      <span className="brand-plate-tag">
-        8-Voice Polyphonic
-        <br />
-        Analog Control Panel
-      </span>
-    </div>
-  );
-}
+const frameStyle = (f: { x: number; y: number; w: number; h: number }) => ({
+  left: f.x,
+  top: f.y,
+  width: f.w,
+  height: f.h
+});
 
 /**
- * Fixed-coordinate faceplate: columns sit at absolute traced x-positions on
- * a fixed-width canvas and the whole plate scales uniformly to the viewport,
- * so the geometry never reflows — like real panel art.
+ * Fixed-coordinate faceplate traced from the hardware: every frame sits at
+ * absolute coordinates on a fixed canvas, and the whole plate scales
+ * uniformly to the viewport — geometry never reflows, like real panel art.
  */
 export function Stage() {
   const wrap = useRef<HTMLDivElement>(null);
-  const stage = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
-  const [stageH, setStageH] = useState(700);
 
   useEffect(() => {
     const el = wrap.current!;
-    // Column heights come from the tallest column's natural content; the
-    // other columns stretch their last frame so all bottoms align.
-    const measure = () => {
-      setScale(el.clientWidth / STAGE_W);
-      let max = 0;
-      stage.current!.querySelectorAll<HTMLElement>(".stage-col").forEach((col) => {
-        let sum = (col.children.length - 1) * 10;
-        for (const child of Array.from(col.children)) {
-          sum += (child as HTMLElement).offsetHeight;
-        }
-        max = Math.max(max, sum);
-      });
-      if (max > 0) setStageH((prev) => Math.max(prev === 700 ? 0 : prev, max + 28));
-    };
-    measure();
-    const observer = new ResizeObserver(measure);
+    const update = () => setScale(el.clientWidth / STAGE.w);
+    update();
+    const observer = new ResizeObserver(update);
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div className="stage-wrap" ref={wrap} style={{ height: stageH * scale }}>
+    <div className="stage-wrap" ref={wrap} style={{ height: STAGE.h * scale }}>
       <div
         className="stage"
-        ref={stage}
-        style={{ width: STAGE_W, height: stageH, transform: `scale(${scale})` }}
+        style={{ width: STAGE.w, height: STAGE.h, transform: `scale(${scale})` }}
       >
-        {COLUMNS.map((col) => (
-          <div
-            key={col.x}
-            className="stage-col"
-            style={{ left: col.x, width: col.w, height: stageH - 28 }}
-          >
-            {col.titles.map((title) => {
-              if (title === "@brand") return <BrandPlate key={title} />;
-              const section = sectionByTitle(title);
-              return section ? <PanelSection key={title} section={section} /> : null;
-            })}
-          </div>
-        ))}
+        <div className="brand-plate" style={frameStyle(BRAND_FRAME)}>
+          <span className="brand-plate-name">MUSE</span>
+          <span className="brand-plate-tag">
+            8-Voice Polyphonic
+            <br />
+            Analog Control Panel
+          </span>
+        </div>
+
+        {FRAMES.map((f) => {
+          const section = sectionByTitle(f.title);
+          if (!section) return null;
+          return (
+            <div key={f.title} className="frame" style={frameStyle(f)}>
+              <PanelSection section={section} />
+            </div>
+          );
+        })}
+
+        <div className="frame programmer-frame" style={frameStyle(PROGRAMMER_FRAME)}>
+          <PatchLibrary />
+        </div>
+
+        <div className="moog-frame" style={frameStyle(MOOG_FRAME)}>
+          <span className="moog-badge">moog</span>
+        </div>
       </div>
     </div>
   );

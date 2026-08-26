@@ -8,10 +8,10 @@ export function MidiToolbar() {
 
   return (
     <div className="midi-toolbar">
-      <div className="brand">
-        <span className="brand-moog">MUSE</span>
-        <span className="brand-sub">MIDI Control Panel</span>
-      </div>
+      {/* the top rail carries the big moog script, like the hardware's back panel */}
+      <span className="moog-script" aria-hidden="true">
+        moog
+      </span>
 
       {store.status === "unsupported" && (
         <span className="midi-warning">{store.statusMessage}</span>
@@ -20,6 +20,7 @@ export function MidiToolbar() {
         <span className="midi-warning">MIDI access was denied — reload and allow MIDI.</span>
       )}
 
+      <div className="toolbar-controls">
       {store.status === "ready" && !isJuce && (
         <>
           <label>
@@ -89,6 +90,7 @@ export function MidiToolbar() {
       </button>
 
       {store.lastIncoming && <span className="midi-activity">⇠ {store.lastIncoming}</span>}
+      </div>
     </div>
   );
 }

@@ -1,8 +1,10 @@
 import { useCallback, useRef } from "react";
-import { formatValue } from "../../domain";
 import { SliderProps } from "./VSlider";
 
-/** Horizontal fader, used for the center MIX block like the hardware. */
+/**
+ * Compact horizontal fader row (track with the label printed at its side),
+ * used for the MIX block and the envelope sections like the hardware.
+ */
 export function HSlider({ param, value, onChange }: SliderProps) {
   const track = useRef<HTMLDivElement>(null);
 
@@ -52,11 +54,10 @@ export function HSlider({ param, value, onChange }: SliderProps) {
         <span className="hslider-slot" />
         <span
           className="hslider-thumb"
-          style={{ left: `calc((100% - 16px) * ${value / 127})` }}
+          style={{ left: `calc((100% - 14px) * ${value / 127})` }}
         />
       </div>
-      <span className="control-label">{param.name}</span>
-      <span className="control-value">{formatValue(param, value)}</span>
+      <span className="hslider-name">{param.name}</span>
     </div>
   );
 }
