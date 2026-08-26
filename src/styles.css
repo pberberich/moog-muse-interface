@@ -420,15 +420,32 @@ button:disabled {
   opacity: 0.9;
 }
 
-.knob svg {
+.knob-stage {
+  position: relative;
   cursor: ns-resize;
   touch-action: none;
   outline: none;
   border-radius: 50%;
 }
 
-.knob svg:focus-visible {
+.knob-stage:focus-visible {
   box-shadow: 0 0 0 2px var(--amber);
+}
+
+.knob-ticks {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.knob-photo {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  filter: drop-shadow(0 2.5px 3px rgba(0, 0, 0, 0.65));
 }
 
 .knob-tick {
