@@ -4,9 +4,9 @@
 
 :root {
   --room: #0b0a09;
-  --panel: #232326;
-  --panel-deep: #1c1c1f;
-  --panel-edge: #101012;
+  --panel: #1a1a1d;
+  --panel-deep: #131316;
+  --panel-edge: #0c0c0e;
   --silk: rgba(232, 228, 216, 0.42);
   --silk-strong: rgba(232, 228, 216, 0.75);
   --ink: #e8e4d8;
@@ -218,17 +218,70 @@ button:disabled {
 /* ---------- panel rows + silkscreen section frames ---------- */
 
 .panel {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
+  display: grid;
+  grid-template-columns: repeat(27, 1fr);
+  gap: 0.8rem;
   padding: 1.1rem 0.2rem 0.9rem;
+  align-items: stretch;
 }
 
-.panel-row {
+.panel-col {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.9rem;
+  flex-direction: column;
+  gap: 0.8rem;
+  min-width: 0;
+}
+
+.panel-col > .panel-section,
+.panel-col > .section-pair {
+  flex: 0 0 auto;
+}
+
+.panel-col > :last-child {
+  flex: 1 0 auto;
+}
+
+.section-pair {
+  display: flex;
+  gap: 0.8rem;
   align-items: stretch;
+}
+
+.section-pair > .panel-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.section-pair > .panel-section h2 {
+  font-size: 0.48rem;
+  letter-spacing: 0.06em;
+}
+
+.brand-plate {
+  border: 1px solid var(--silk);
+  border-radius: 7px;
+  padding: 0.5rem 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.brand-plate-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  color: var(--ink);
+}
+
+.brand-plate-tag {
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-dim);
+  line-height: 1.5;
+  border-left: 1px solid var(--silk);
+  padding-left: 0.8rem;
 }
 
 .panel-section {
@@ -247,19 +300,22 @@ button:disabled {
   left: 50%;
   transform: translate(-50%, -52%);
   background: var(--panel);
-  padding: 0 0.7em;
-  font-size: 0.6rem;
+  padding: 0 0.45em;
+  font-size: 0.52rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.1em;
   white-space: nowrap;
+  max-width: calc(100% - 1rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: var(--silk-strong);
 }
 
 .section-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 0.55rem;
+  gap: 0.35rem 0.3rem;
   justify-content: center;
   align-items: flex-start;
 }
@@ -270,7 +326,7 @@ button:disabled {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 4.25rem;
+  width: 4rem;
   gap: 0.14rem;
   padding-top: 0.1rem;
 }
@@ -357,11 +413,11 @@ button:disabled {
 
 .toggle-btn.on .toggle-lens {
   background:
-    radial-gradient(60% 70% at 50% 45%, #ffd9a1 0%, var(--amber) 45%, var(--amber-deep) 100%);
+    radial-gradient(60% 70% at 50% 45%, #ffb49a 0%, var(--led) 45%, #a1290a 100%);
   box-shadow:
-    0 0 10px rgba(255, 176, 46, 0.65),
-    0 0 3px rgba(255, 176, 46, 0.9),
-    inset 0 1px 2px rgba(255, 255, 255, 0.5);
+    0 0 10px rgba(255, 92, 31, 0.65),
+    0 0 3px rgba(255, 92, 31, 0.9),
+    inset 0 1px 2px rgba(255, 255, 255, 0.45);
 }
 
 /* LED ladder selector */
@@ -416,6 +472,129 @@ button:disabled {
 
 .enum-btn.active .enum-text {
   color: var(--ink);
+}
+
+/* ---------- faders (envelopes vertical, mixer horizontal) ---------- */
+
+/* envelope banks: ADSR faders in a fixed 4-across rank like the hardware */
+.sliders-v .section-controls {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  justify-items: center;
+  row-gap: 0.5rem;
+}
+
+.sliders-v .vslider {
+  width: 100%;
+}
+
+.sliders-v .vslider .control-label {
+  font-size: 0.46rem;
+  letter-spacing: 0.05em;
+}
+
+.sliders-v .toggle {
+  grid-column: span 2;
+}
+
+.vslider {
+  width: 2.55rem;
+}
+
+.vslider-track {
+  position: relative;
+  width: 1.5rem;
+  height: 5.4rem;
+  touch-action: none;
+  cursor: ns-resize;
+  outline: none;
+}
+
+.vslider-track:focus-visible,
+.hslider-track:focus-visible {
+  box-shadow: 0 0 0 2px var(--amber);
+  border-radius: 4px;
+}
+
+.vslider-slot {
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  bottom: 2px;
+  width: 4px;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  background: #08080a;
+  box-shadow: inset 0 1px 3px #000, 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.vslider-thumb {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1.4rem;
+  height: 16px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #3a3a3f 0%, #141416 45%, #060607 100%);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.vslider-thumb::after,
+.hslider-thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  background: #f4f1e6;
+  border-radius: 1px;
+}
+
+.vslider-thumb::after {
+  width: 70%;
+  height: 2px;
+}
+
+.hslider {
+  width: 8rem;
+}
+
+.hslider-track {
+  position: relative;
+  width: 7.4rem;
+  height: 2rem;
+  touch-action: none;
+  cursor: ew-resize;
+  outline: none;
+}
+
+.hslider-slot {
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  right: 2px;
+  height: 4px;
+  transform: translateY(-50%);
+  border-radius: 2px;
+  background: #08080a;
+  box-shadow: inset 0 1px 3px #000, 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.hslider-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 1.7rem;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #3a3a3f 0%, #141416 45%, #060607 100%);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.8), inset 1px 0 0 rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.hslider-thumb::after {
+  width: 2px;
+  height: 70%;
 }
 
 /* ---------- patch library tray ---------- */
@@ -490,6 +669,18 @@ button:disabled {
   display: flex;
   gap: 0.35rem;
   margin-left: auto;
+}
+
+.moog-badge {
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  padding: 0.05rem 0.55rem 0.15rem;
+  line-height: 1.2;
 }
 
 /* ---------- keybed: wheels + keys ---------- */
@@ -630,12 +821,13 @@ button:disabled {
 /* ---------- responsive / touch (iPad) ---------- */
 
 @media (max-width: 1150px) {
-  .panel-row {
-    justify-content: stretch;
+  .panel {
+    display: flex;
+    flex-direction: column;
   }
 
-  .panel-section {
-    flex-basis: 18rem;
+  .panel-col > .panel-section {
+    flex: none;
   }
 }
 

@@ -36,7 +36,7 @@ export function PatchLibrary() {
 
   return (
     <aside className="patch-library">
-      <h2>Patch Library</h2>
+      <h2>Programmer</h2>
       <div className="patch-save-row">
         <input
           type="text"
@@ -106,6 +106,7 @@ export function PatchLibrary() {
           }}
         />
       </div>
+      <span className="moog-badge">moog</span>
     </aside>
   );
 }

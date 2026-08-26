@@ -5,6 +5,8 @@ export interface KnobProps {
   param: Param;
   value: number;
   onChange: (value: number) => void;
+  /** Rendered diameter in px; geometry scales via the fixed viewBox. */
+  size?: number;
 }
 
 const SWEEP = 270; // degrees of rotation from min to max
@@ -19,7 +21,7 @@ function polar(angleDeg: number, radius: number): [number, number] {
 }
 
 /** Moog-style skirted knob: tick ring, black skirt, domed cap, white pointer. */
-export function Knob({ param, value, onChange }: KnobProps) {
+export function Knob({ param, value, onChange, size = SIZE }: KnobProps) {
   const dragState = useRef<{ startY: number; startValue: number } | null>(null);
 
   const onPointerDown = useCallback(
@@ -92,8 +94,8 @@ export function Knob({ param, value, onChange }: KnobProps) {
     <div className="control knob" title={param.description ?? param.name}>
       <span className="control-label">{param.name}</span>
       <svg
-        width={SIZE}
-        height={SIZE}
+        width={size}
+        height={size}
         viewBox={`0 0 ${SIZE} ${SIZE}`}
         tabIndex={0}
         role="slider"
