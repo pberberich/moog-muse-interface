@@ -13,6 +13,7 @@ export type MidiStatus = "idle" | "ready" | "unsupported" | "denied";
 
 export class MuseStore {
   private values = new Map<number, number>();
+  private altBuffer: Map<number, number> | null = null;
   private listeners = new Set<() => void>();
   private snapshotCache: Record<string, unknown> | null = null;
 
@@ -125,6 +126,19 @@ export class MuseStore {
     for (const p of ALL_PARAMS) {
       this.values.set(p.cc, preset.values[p.cc] ?? p.defaultValue);
     }
+    this.sendAll();
+    this.emit();
+  }
+
+  /**
+   * Hardware-style compare: swap the panel with a second edit buffer and
+   * transmit it. The first press seeds the buffer with the current panel,
+   * so subsequent presses flip between two independent edits.
+   */
+  swapCompare(): void {
+    const previous = this.altBuffer ?? new Map(this.values);
+    this.altBuffer = new Map(this.values);
+    this.values = previous;
     this.sendAll();
     this.emit();
   }

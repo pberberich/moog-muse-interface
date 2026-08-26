@@ -74,6 +74,13 @@ export function MidiToolbar() {
       </button>
       <button
         type="button"
+        onClick={() => store.swapCompare()}
+        title="Swap between two edit buffers (hardware-style compare)"
+      >
+        A/B
+      </button>
+      <button
+        type="button"
         className="panic-btn"
         onClick={() => store.panic()}
         title="All sound off + all notes off (CC 120/123)"

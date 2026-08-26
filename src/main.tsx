@@ -8,3 +8,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <App />
   </React.StrictMode>
 );
+
+// Offline support in the browser build; the JUCE WebView serves the app from
+// embedded resources and needs no service worker.
+if (import.meta.env.PROD && !window.__JUCE__ && "serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js").catch(() => {});
+}

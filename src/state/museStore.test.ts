@@ -71,11 +71,38 @@ describe("notes and bulk send", () => {
     expect(transport.sent).toContainEqual([0x81, 60, 0]);
   });
 
+  it("sends 14-bit pitch bend with center/extremes clamped", () => {
+    store.pitchBend(0);
+    store.pitchBend(1.5);
+    store.pitchBend(-2);
+    expect(transport.sent).toContainEqual([0xe0, 8192 & 0x7f, 8192 >> 7]); // center
+    expect(transport.sent).toContainEqual([0xe0, 16383 & 0x7f, 16383 >> 7]); // max
+    expect(transport.sent).toContainEqual([0xe0, 1 & 0x7f, 0]); // min (8192-8191)
+  });
+
   it("sendAll transmits exactly one CC per parameter", () => {
     store.sendAll();
     expect(transport.sent).toHaveLength(ALL_PARAMS.length);
     const ccs = transport.sent.map(([, cc]) => cc);
     expect(new Set(ccs).size).toBe(ALL_PARAMS.length);
+  });
+
+  it("swapCompare flips between two independent edit buffers", () => {
+    store.setValue(67, 10);
+    store.swapCompare(); // seeds buffer B with the current panel
+    store.setValue(67, 120);
+
+    store.swapCompare();
+    expect(store.getValue(67)).toBe(10);
+    store.swapCompare();
+    expect(store.getValue(67)).toBe(120);
+  });
+
+  it("swapCompare transmits the swapped buffer", () => {
+    store.swapCompare();
+    transport.sent = [];
+    store.swapCompare();
+    expect(transport.sent).toHaveLength(ALL_PARAMS.length);
   });
 
   it("panic sends all-sound-off and all-notes-off on the active channel", () => {

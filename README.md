@@ -5,6 +5,8 @@ A browser-based control panel and patch librarian for the
 polysynth — inspired by
 [prophet-panel](https://github.com/TonyGermaneri/prophet-panel).
 
+![Moog Muse Interface panel](docs/screenshot.png)
+
 Every front-panel section of the Muse is mirrored on screen — oscillators,
 modulation oscillator and routing, dual filters, both envelopes, the three
 LFOs, mixer, voice controls, delay, and arp/clock — with **100+ parameters**
@@ -19,13 +21,17 @@ Muse responds; turn a knob on the Muse and the screen follows.
   the on-screen controls in real time
 - **Patch librarian** — save/load patches locally, JSON import/export,
   one-click "Send all" to push the whole panel to the synth, init patch,
-  and four curated starter presets (Warm Pad, Muse Bass, Sync Lead, FM Keys)
+  four curated starter presets (Warm Pad, Muse Bass, Sync Lead, FM Keys), and
+  a hardware-style A/B compare that swaps between two edit buffers
 - **Playable keyboard** — on-screen touch keyboard plus computer-keyboard
   playing (`A`–`L` keys, `Z`/`X` to shift octaves), velocity slider, and a
   Panic button (all sound off / all notes off)
-- **Runs anywhere** — plain web app (Web MIDI), installable PWA with a
-  touch-friendly layout for tablets, and native **AU / VST3 / Standalone**
-  builds via a thin JUCE WebView wrapper (see [`native/`](native/README.md))
+- **Runs anywhere** — plain web app (Web MIDI), installable PWA that works
+  offline (service-worker app-shell cache) with a touch-friendly layout for
+  tablets, and native **AU / VST3 / Standalone** builds via a thin JUCE
+  WebView wrapper (see [`native/`](native/README.md)); the Native plugins
+  GitHub Actions workflow uploads ready-built macOS/Windows/Linux plugin
+  artifacts
 
 ## Quick start (web)
 
