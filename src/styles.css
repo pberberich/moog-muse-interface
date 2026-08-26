@@ -1,0 +1,440 @@
+:root {
+  --panel-bg: #17130f;
+  --panel-card: #211b15;
+  --panel-edge: #3a2f24;
+  --wood: #4b2e1a;
+  --cream: #efe6d5;
+  --cream-dim: #b3a68e;
+  --accent: #e0a458;
+  --accent-hot: #ff5c39;
+  --led-off: #3c2a1e;
+  --led-on: #ff5c39;
+  --knob-body: #101010;
+  --knob-ring: #2c251d;
+  font-family: "Futura", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background: var(--panel-bg);
+  color: var(--cream);
+  min-height: 100%;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  border-left: 10px solid var(--wood);
+  border-right: 10px solid var(--wood);
+}
+
+/* ---------- toolbar ---------- */
+
+.midi-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  padding: 0.6rem 1rem;
+  background: linear-gradient(#0d0a08, #1a140f);
+  border-bottom: 2px solid var(--panel-edge);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  margin-right: 0.6rem;
+}
+
+.brand-moog {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  color: var(--cream);
+}
+
+.brand-sub {
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.midi-toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cream-dim);
+}
+
+select,
+input[type="text"] {
+  background: #0d0a08;
+  color: var(--cream);
+  border: 1px solid var(--panel-edge);
+  border-radius: 4px;
+  padding: 0.3rem 0.4rem;
+  font-size: 0.8rem;
+  max-width: 15rem;
+}
+
+button {
+  background: #2a2018;
+  color: var(--cream);
+  border: 1px solid var(--panel-edge);
+  border-radius: 4px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: #3a2c1e;
+  border-color: var(--accent);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.midi-warning {
+  color: var(--accent-hot);
+  font-size: 0.8rem;
+}
+
+.midi-ok {
+  color: var(--accent);
+  font-size: 0.8rem;
+}
+
+.midi-activity {
+  font-size: 0.72rem;
+  color: var(--cream-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- panel ---------- */
+
+.app-body {
+  display: flex;
+  flex: 1;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  align-items: flex-start;
+}
+
+.panel {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  align-content: flex-start;
+}
+
+.panel-section {
+  background: var(--panel-card);
+  border: 1px solid var(--panel-edge);
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem 0.65rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.panel-section h2 {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  border-bottom: 1px solid var(--panel-edge);
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+}
+
+.section-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.7rem;
+  justify-content: flex-start;
+  max-width: 24rem;
+}
+
+/* ---------- controls ---------- */
+
+.control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 4.1rem;
+  gap: 0.15rem;
+}
+
+.control-label {
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cream-dim);
+  text-align: center;
+  line-height: 1.15;
+}
+
+.control-value {
+  font-size: 0.6rem;
+  color: var(--cream);
+  font-variant-numeric: tabular-nums;
+  min-height: 0.8rem;
+}
+
+.knob svg {
+  cursor: ns-resize;
+  touch-action: none;
+  border-radius: 50%;
+  outline: none;
+}
+
+.knob svg:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.knob-ring {
+  fill: var(--knob-ring);
+  stroke: var(--panel-edge);
+  stroke-width: 1;
+}
+
+.knob-body {
+  fill: var(--knob-body);
+  stroke: #000;
+  stroke-width: 1.5;
+}
+
+.knob-pointer {
+  stroke: var(--cream);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.knob-detent {
+  stroke: var(--accent);
+  stroke-width: 1.6;
+}
+
+.toggle-btn {
+  width: 2rem;
+  height: 1.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  background: #14100c;
+  padding: 0;
+}
+
+.toggle-btn .led {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--led-off);
+  box-shadow: inset 0 0 2px #000;
+}
+
+.toggle-btn.on .led {
+  background: var(--led-on);
+  box-shadow: 0 0 8px var(--led-on), 0 0 2px var(--led-on);
+}
+
+.enum {
+  width: auto;
+  max-width: 9rem;
+}
+
+.enum-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+}
+
+.enum-btn {
+  font-size: 0.58rem;
+  padding: 0.22rem 0.4rem;
+  border-radius: 3px;
+  background: #14100c;
+  color: var(--cream-dim);
+}
+
+.enum-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #1a120a;
+  font-weight: 700;
+}
+
+/* ---------- patch library ---------- */
+
+.patch-library {
+  width: 15rem;
+  flex-shrink: 0;
+  background: var(--panel-card);
+  border: 1px solid var(--panel-edge);
+  border-radius: 8px;
+  padding: 0.7rem;
+  position: sticky;
+  top: 4.4rem;
+}
+
+.patch-library h2 {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.patch-save-row {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.patch-save-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.patch-list {
+  list-style: none;
+  max-height: 40vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.patch-list li {
+  display: flex;
+  gap: 2px;
+}
+
+.patch-empty {
+  font-size: 0.72rem;
+  color: var(--cream-dim);
+}
+
+.patch-load {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.patch-delete {
+  padding: 0.35rem 0.5rem;
+  color: var(--accent-hot);
+}
+
+.patch-io {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+
+/* ---------- keyboard ---------- */
+
+.keyboard-wrap {
+  border-top: 2px solid var(--panel-edge);
+  background: #0d0a08;
+  padding: 0.5rem 1rem 0.9rem;
+}
+
+.keyboard-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.75rem;
+  color: var(--cream-dim);
+}
+
+.keyboard-hint {
+  margin-left: auto;
+  font-size: 0.68rem;
+}
+
+.keyboard {
+  display: flex;
+  height: 6.5rem;
+  position: relative;
+}
+
+.key {
+  border-radius: 0 0 4px 4px;
+  border: 1px solid #000;
+  padding: 0;
+  touch-action: none;
+}
+
+.key.white {
+  flex: 1;
+  background: linear-gradient(#f5efe2, #ded5c0);
+}
+
+.key.black {
+  flex: 0 0 2.2%;
+  margin: 0 -1.1%;
+  height: 60%;
+  background: linear-gradient(#2b2b2b, #101010);
+  z-index: 2;
+}
+
+.key.white.held {
+  background: var(--accent);
+}
+
+.key.black.held {
+  background: var(--accent-hot);
+}
+
+/* ---------- responsive / touch (iPad) ---------- */
+
+@media (max-width: 1100px) {
+  .app-body {
+    flex-direction: column;
+  }
+
+  .patch-library {
+    width: 100%;
+    position: static;
+  }
+}
+
+@media (pointer: coarse) {
+  .control {
+    width: 4.6rem;
+  }
+
+  button {
+    padding: 0.5rem 0.85rem;
+  }
+
+  .keyboard {
+    height: 8rem;
+  }
+}
