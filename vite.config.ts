@@ -11,6 +11,7 @@ export default defineConfig({
     assetsDir: "assets"
   },
   test: {
-    environment: "jsdom"
+    environment: "jsdom",
+    include: ["src/**/*.test.{ts,tsx}"]
   }
 });

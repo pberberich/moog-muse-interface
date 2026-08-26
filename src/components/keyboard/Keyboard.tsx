@@ -5,7 +5,10 @@ import { isBlackKey, KEY_TO_SEMITONE, NUM_KEYS } from "./layout";
 export function Keyboard() {
   const store = useStore();
   const [baseOctave, setBaseOctave] = useState(4); // C4-based
+  const [velocity, setVelocity] = useState(100);
   const [held, setHeld] = useState<Set<number>>(new Set());
+  const velocityRef = useRef(velocity);
+  velocityRef.current = velocity;
   const heldRef = useRef(held);
   heldRef.current = held;
   const baseNote = baseOctave * 12; // C of the base octave
@@ -13,7 +16,7 @@ export function Keyboard() {
   const noteOn = useCallback(
     (note: number) => {
       if (note < 0 || note > 127 || heldRef.current.has(note)) return;
-      store.noteOn(note);
+      store.noteOn(note, velocityRef.current);
       setHeld((prev) => new Set(prev).add(note));
     },
     [store]
@@ -67,6 +70,16 @@ export function Keyboard() {
         <button type="button" onClick={() => setBaseOctave((o) => Math.min(8, o + 1))}>
           Oct +
         </button>
+        <label className="velocity-label">
+          Vel {velocity}
+          <input
+            type="range"
+            min={1}
+            max={127}
+            value={velocity}
+            onChange={(e) => setVelocity(Number(e.target.value))}
+          />
+        </label>
         <span className="keyboard-hint">Play with A–L keys · Z/X shifts octave</span>
       </div>
       <div className="keyboard">

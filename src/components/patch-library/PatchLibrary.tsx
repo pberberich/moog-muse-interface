@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { PRESETS } from "../../domain";
 import { useStore } from "../../state";
 
 export function PatchLibrary() {
@@ -67,6 +68,21 @@ export function PatchLibrary() {
               onClick={() => confirm(`Delete patch “${p.name}”?`) && store.deletePatch(p.name)}
             >
               ×
+            </button>
+          </li>
+        ))}
+      </ul>
+      <h2 className="preset-heading">Starter Presets</h2>
+      <ul className="patch-list">
+        {PRESETS.map((p) => (
+          <li key={p.name}>
+            <button
+              type="button"
+              className="patch-load"
+              title={p.description}
+              onClick={() => store.applyPreset(p)}
+            >
+              {p.name}
             </button>
           </li>
         ))}

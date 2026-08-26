@@ -307,6 +307,28 @@ button:disabled {
   margin-bottom: 0.5rem;
 }
 
+.preset-heading {
+  margin-top: 0.8rem;
+}
+
+.panic-btn {
+  color: var(--accent-hot);
+  border-color: var(--accent-hot);
+}
+
+.velocity-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  color: var(--cream-dim);
+}
+
+.velocity-label input[type="range"] {
+  width: 7rem;
+  accent-color: var(--accent);
+}
+
 .patch-save-row {
   display: flex;
   gap: 0.35rem;

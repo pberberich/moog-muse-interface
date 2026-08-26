@@ -1,4 +1,4 @@
-import { ALL_PARAMS, PARAMS_BY_CC } from "../domain";
+import { ALL_PARAMS, PARAMS_BY_CC, Preset } from "../domain";
 import { MidiTransport, PortInfo } from "../midi";
 import {
   loadChannel,
@@ -111,6 +111,21 @@ export class MuseStore {
     for (const p of ALL_PARAMS) this.values.set(p.cc, p.defaultValue);
     this.sendAll();
     this.emit();
+  }
+
+  /** Init defaults overlaid with the preset's values, transmitted in full. */
+  applyPreset(preset: Preset): void {
+    for (const p of ALL_PARAMS) {
+      this.values.set(p.cc, preset.values[p.cc] ?? p.defaultValue);
+    }
+    this.sendAll();
+    this.emit();
+  }
+
+  /** All-sound-off + all-notes-off on the active channel. */
+  panic(): void {
+    this.transport.send([0xb0 | this.channel, 120, 0]);
+    this.transport.send([0xb0 | this.channel, 123, 0]);
   }
 
   // ----- Patch library -----

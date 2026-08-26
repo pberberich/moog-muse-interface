@@ -72,6 +72,14 @@ export function MidiToolbar() {
       <button type="button" onClick={() => store.resetToInit()} title="Reset panel to the init patch and transmit it">
         Init
       </button>
+      <button
+        type="button"
+        className="panic-btn"
+        onClick={() => store.panic()}
+        title="All sound off + all notes off (CC 120/123)"
+      >
+        Panic
+      </button>
 
       {store.lastIncoming && <span className="midi-activity">⇠ {store.lastIncoming}</span>}
     </div>

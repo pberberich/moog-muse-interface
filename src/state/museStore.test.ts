@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { ALL_PARAMS, PARAMS_BY_CC } from "../domain";
+import { ALL_PARAMS, PARAMS_BY_CC, PRESETS } from "../domain";
 import { FakeTransport } from "../midi/fakeTransport";
 import { MuseStore } from "./museStore";
 
@@ -76,6 +76,29 @@ describe("notes and bulk send", () => {
     expect(transport.sent).toHaveLength(ALL_PARAMS.length);
     const ccs = transport.sent.map(([, cc]) => cc);
     expect(new Set(ccs).size).toBe(ALL_PARAMS.length);
+  });
+
+  it("panic sends all-sound-off and all-notes-off on the active channel", () => {
+    store.setChannel(2);
+    store.panic();
+    expect(transport.sent).toContainEqual([0xb2, 120, 0]);
+    expect(transport.sent).toContainEqual([0xb2, 123, 0]);
+  });
+});
+
+describe("presets", () => {
+  it("applies preset values on top of init defaults and transmits everything", () => {
+    const pad = PRESETS.find((p) => p.name === "Warm Pad")!;
+    store.setValue(3, 127); // stray change a preset never touches (Mute)
+
+    transport.sent = [];
+    store.applyPreset(pad);
+
+    for (const [cc, value] of Object.entries(pad.values)) {
+      expect(store.getValue(Number(cc))).toBe(value);
+    }
+    expect(store.getValue(3)).toBe(PARAMS_BY_CC.get(3)!.defaultValue);
+    expect(transport.sent).toHaveLength(ALL_PARAMS.length);
   });
 });
 
