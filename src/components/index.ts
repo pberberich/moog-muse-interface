@@ -5,3 +5,4 @@ export * from "./panel";
 export * from "./toolbar";
 export * from "./keyboard";
 export * from "./patch-library";
+export * from "./scope";

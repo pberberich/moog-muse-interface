@@ -1,9 +1,9 @@
 name: Deploy to GitHub Pages
 
-# Deploys from develop (and main, if one is created later).
+# Deploys from the default branch, develop, and main if one is created later.
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, claude/moog-muse-interface-0sw3dm]
   workflow_dispatch:
 
 permissions:
