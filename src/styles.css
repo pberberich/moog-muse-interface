@@ -41,8 +41,9 @@ body {
 .room {
   min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
   padding: 1.4rem 0.8rem 2rem;
   background:
     radial-gradient(120% 90% at 50% 0%, #171512 0%, var(--room) 60%);
@@ -1230,5 +1231,116 @@ button:disabled {
 
   .keyboard {
     height: 9.5rem;
+  }
+}
+
+
+/* ---------- outboard sync scope ---------- */
+
+.scope {
+  width: 100%;
+  max-width: 1500px;
+  padding: 0.9rem 1.1rem 1rem;
+  border-radius: 10px;
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-deep) 100%);
+  border: 1px solid var(--panel-edge);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.scope-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.7rem;
+}
+
+.scope-head h2 {
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--silk-strong);
+  font-weight: 600;
+}
+
+.scope-head p {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  color: var(--ink-dim);
+}
+
+.scope-head b {
+  color: var(--amber);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.scope-lamp {
+  padding: 0.16rem 0.5rem;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.scope-lamp.on {
+  color: #2a1408;
+  border-color: transparent;
+  background: var(--led);
+  box-shadow: 0 0 10px rgba(255, 92, 31, 0.5);
+}
+
+.scope-pane {
+  position: relative;
+  margin-bottom: 0.55rem;
+  border-radius: 5px;
+  background: #0d0d0f;
+  border: 1px solid var(--panel-edge);
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+.scope-pane canvas {
+  display: block;
+  width: 100%;
+  height: 132px;
+}
+
+.scope-caption {
+  position: absolute;
+  right: 0.55rem;
+  bottom: 0.35rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(157, 153, 140, 0.7);
+  pointer-events: none;
+  padding: 0.12rem 0.32rem;
+  border-radius: 3px;
+  background: rgba(13, 13, 15, 0.82);
+}
+
+.scope-caption em {
+  font-style: normal;
+  color: rgba(255, 92, 31, 0.8);
+}
+
+.scope-note {
+  max-width: 64ch;
+  font-size: 0.66rem;
+  line-height: 1.55;
+  color: rgba(157, 153, 140, 0.72);
+}
+
+@media (max-width: 720px) {
+  .scope-pane canvas {
+    height: 104px;
   }
 }

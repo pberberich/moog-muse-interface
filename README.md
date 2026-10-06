@@ -46,8 +46,10 @@ access, and pick your Muse in the **In**/**Out** selectors — ports with
 channel (Settings → MIDI on the synth), and make sure CC transmit/receive is
 enabled there.
 
-`npm run build` produces a static `dist/` you can host anywhere; a GitHub
-Actions workflow deploys it to GitHub Pages on every push to `main`.
+`npm run build` produces a static `dist/` you can host anywhere; the Pages
+workflow deploys it on every push to the default branch or `develop` (the
+deploy job needs Pages enabled for the repo with **GitHub Actions** as the
+source, otherwise it fails with a 404).
 
 ## Native plugin / standalone
 
@@ -85,13 +87,20 @@ src/state/             App state
   patchStorage.ts      localStorage persistence + JSON import parsing
   instance.ts          App-wide singleton
   useStore.ts          React binding
+src/analog/            Circuit model of the oscillator pair
+  constants.ts         Component values (capacitor, threshold, switch, tempco)
+  vco.ts               Exponential converter, integrator, comparator, reset
+  sync.ts              Hard-sync coupling and trace rendering
+  spectrum.ts          Radix-2 FFT and dB magnitude, for the scope display
+  patch.ts             Panel CCs to 1V/oct control voltages
 src/components/        UI, one directory per component
-  knob/  switches/  panel/  toolbar/  keyboard/  patch-library/
+  knob/  switches/  panel/  toolbar/  keyboard/  patch-library/  scope/
 native/                JUCE CMake project (AU / VST3 / Standalone / iOS)
 ```
 
-Run the suite with `npm test` (Vitest + Testing Library; 44 tests covering the
-parameter tables, MIDI transports, store behavior, persistence, and controls).
+Run the suite with `npm test` (Vitest + Testing Library; 83 tests covering the
+parameter tables, MIDI transports, store behavior, persistence, controls, and
+the oscillator circuit model).
 
 ## 1:1 photo mode
 
@@ -105,6 +114,37 @@ both layers half-transparent with red frame outlines while aligning
 Photo spec for best results: shot straight-on (camera perpendicular to the
 faceplate, no keyboard angle), evenly lit without glare, cropped to exactly
 the panel area between the wood cheeks, at 3000px wide or more.
+
+## Sync scope
+
+Below the panel sits an outboard scope that shows what **Sync 2→1** (CC 54) is
+actually doing. Both panes are driven by a circuit model in
+[`src/analog/`](src/analog/) rather than a drawing of the expected shape: an
+exponential converter turns each oscillator's control voltage into a charging
+current, that current ramps a timing capacitor, a comparator trips at
+threshold, and a transistor discharges the capacitor through its own
+on-resistance. The master's reset pulse is coupled into the slave's discharge
+switch — the same path the comparator uses, which is why hard sync sounds like
+the oscillator's own reset rather than an effect laid over it.
+
+Resets are resolved to their true sub-sample times rather than snapped to the
+sample grid, so the slave is truncated where it really would be. Move OSC 1's
+Frequency knob with sync engaged and the spectrum stays a comb on OSC 2's
+fundamental while the formant peak sweeps with OSC 1 — the behavior that makes
+a sync lead sound like one.
+
+Two honest limits. The component values are ordinary analog-VCO parts, not
+measurements of a Muse: Moog has not published a schematic, so the topology is
+right but the part values are representative. And this drives a picture, not
+the speakers — every reset is a step discontinuity, so an audio path would need
+band-limited correction (BLEP or antiderivative antialiasing) on top of the
+model, not merely more oversampling.
+
+The model does reproduce one real artifact for free: because each cycle spends
+a finite time discharging and restarts from the residue the switch could not
+drain, a control-voltage octave is not exactly an output octave. That error
+grows with frequency, which is why a real oscillator needs a high-frequency
+trim on top of its 1V/oct scale.
 
 ## MIDI mapping notes
 

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Keyboard, MidiToolbar, Stage } from "./components";
+import { Keyboard, MidiToolbar, Stage, SyncScope } from "./components";
 import { store } from "./state";
 
 export default function App() {
@@ -22,6 +22,7 @@ export default function App() {
         </div>
         <div className="cheek right" />
       </div>
+      <SyncScope />
     </div>
   );
 }
